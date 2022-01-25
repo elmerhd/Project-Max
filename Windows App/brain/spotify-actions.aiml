@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<aiml>
+	<category>
+		<pattern>pause</pattern>
+		<template>
+			<music uri="spotify:pause"/>
+		</template>
+	</category>
+	<category>
+		<pattern>resume</pattern>
+		<template>
+			<music uri="spotify:resume"/>
+		</template>
+	</category>
+	<category>
+		<pattern>next</pattern>
+		<template>
+			<music uri="spotify:next"/>
+		</template>
+	</category>
+	<category>
+		<pattern>previous</pattern>
+		<template>
+			<music uri="spotify:previous"/>
+		</template>
+	</category>
+	<category>
+		<pattern>turn on shuffle mode</pattern>
+		<template>
+			<music uri="spotify:shuffle" value="true"/>
+		</template>
+	</category>
+	<category>
+		<pattern>turn off shuffle mode</pattern>
+		<template>
+			<music uri="spotify:shuffle" value="false"/>
+		</template>
+	</category>
+	<category>
+		<pattern>set volume at *</pattern>
+		<template>
+			<music uri="spotify:volume"/>
+		</template>
+	</category>
+	<category>
+		<pattern>play songs of *</pattern>
+		<template>
+			<music uri="spotify:search:artist"/>
+		</template>
+	</category>
+	<category>
+		<pattern>play songs of *</pattern>
+		<template>
+			<music uri="spotify:search:artist"/>
+		</template>
+	</category>
+	<category>
+		<pattern>play * by *</pattern>
+		<template>
+			<music uri="spotify:search:track"/>
+		</template>
+	</category>
+	<category>
+		<pattern>play album * by *</pattern>
+		<template>
+			<music uri="spotify:search:album"/>
+		</template>
+	</category>
+	<category>
+		<pattern>play it on my *</pattern>
+		<template>
+			<music uri="spotify:transferplayback"/>
+		</template>
+	</category>
+</aiml>

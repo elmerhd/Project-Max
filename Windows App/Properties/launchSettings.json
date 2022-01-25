@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Windows App": {
+      "commandName": "Project",
+      "commandLineArgs": "showUI:true"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<aiml>
+	<category>
+		<pattern>PLAY MOVIE *</pattern>
+		<template>
+			<video />
+		</template>
+	</category>
+	<category>
+		<pattern>WHY NETFLIX IS TAKING SO LONG</pattern>
+		<template>are you connected to the <set name = "topic">internet</set>?</template>
+	</category>
+	<category>
+		<pattern>YES</pattern>
+		<that>are you connected to the internet?</that>
+		<template>maybe your internet connection is slow.</template>
+	</category>
+	<category>
+		<pattern>NO</pattern>
+		<that>are you connected to the internet?</that>
+		<template>well that's a big problem.</template>
+	</category>
+	<category>
+		<pattern>CAN YOU CHECK</pattern>
+		<that>are you connected to the internet?</that>
+		<template>
+			Yes, let me check <system action="checkInternet"/>
+		</template>
+	</category>
+	<category>
+		<pattern>MaxSMSNotification</pattern>
+		<template>
+			<random>
+				<li> {!salutation}, you have a new text message </li>
+			</random>
+		</template>
+	</category>
+	
+</aiml>

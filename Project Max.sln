@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32002.261
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Project Max", "Project Max\Project Max.shproj", "{C9F6C641-1C1F-44D1-A7E9-40C1297D95F7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Windows App", "Windows App\Windows App.csproj", "{9788153C-DAEF-4397-AF84-F68322AC2744}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Project Max\Project Max.projitems*{c9f6c641-1c1f-44d1-a7e9-40c1297d95f7}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9788153C-DAEF-4397-AF84-F68322AC2744}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9788153C-DAEF-4397-AF84-F68322AC2744}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9788153C-DAEF-4397-AF84-F68322AC2744}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9788153C-DAEF-4397-AF84-F68322AC2744}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {741F1FFD-14E6-4555-8EAB-2CE4612965C6}
+	EndGlobalSection
+EndGlobal
