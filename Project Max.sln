@@ -7,6 +7,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Project Max", "Project Max\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Windows App", "Windows App\Windows App.csproj", "{9788153C-DAEF-4397-AF84-F68322AC2744}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Android App", "Android App\Android App.csproj", "{4ED26940-BE35-47F2-A861-C776B0195BD6}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Project Max\Project Max.projitems*{c9f6c641-1c1f-44d1-a7e9-40c1297d95f7}*SharedItemsImports = 13
@@ -20,6 +22,12 @@ Global
 		{9788153C-DAEF-4397-AF84-F68322AC2744}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9788153C-DAEF-4397-AF84-F68322AC2744}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9788153C-DAEF-4397-AF84-F68322AC2744}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ED26940-BE35-47F2-A861-C776B0195BD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ED26940-BE35-47F2-A861-C776B0195BD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ED26940-BE35-47F2-A861-C776B0195BD6}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{4ED26940-BE35-47F2-A861-C776B0195BD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ED26940-BE35-47F2-A861-C776B0195BD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ED26940-BE35-47F2-A861-C776B0195BD6}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

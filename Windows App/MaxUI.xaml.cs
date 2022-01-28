@@ -26,6 +26,8 @@ namespace Max
         public DataContext MaxDataContext { get; set; }
         public MaxEngine MaxEngine { get; set; }
 
+        public string LastSubText { get; set; }
+
         //public SerialPort SerialPort;
 
         public MaxUI()
@@ -41,6 +43,21 @@ namespace Max
             this.MaxEngine = maxEngine;
             MaxDataContext = new DataContext();
             this.DataContext = MaxDataContext;
+        }
+        public void UpdateResponseText(string text) 
+        {
+            this.Dispatcher.Invoke(()=> {
+                LastSubText = text;
+                SubText.Text = text;
+            });
+        }
+
+        public void UpdateRecognizedText(string text)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                SubText2.Text = text;
+            });
         }
 
 

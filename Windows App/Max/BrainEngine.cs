@@ -154,54 +154,7 @@ namespace Max
 
         public void LearnIt()
         {
-            if (SearchResult != null && SearchResult.Results.Length > 0)
-            {
-                List<Category> categories = new List<Category>();
-                OxfordDictionariesAPI.Models.Result[] results = SearchResult.Results;
-                List<string> definitions = new List<string>();
-                List<string> examples = new List<string>();
-                // result could be in a diffent branch of studies e.g biology
-                foreach (OxfordDictionariesAPI.Models.Result result in results)
-                {
-                    // lexical categories e.g noun, verb, adjective ..
-                    foreach (LexicalEntry lexicalEntry in result.LexicalEntries)
-                    {
-                        // definitions
-                        foreach (Entry entry in lexicalEntry.Entries)
-                        {
-                            foreach (Sense sense in entry.Senses)
-                            {
-                                bool hasDomain = sense.Domains.Any();
-
-                                foreach (string definition in sense.Definitions)
-                                {
-                                    string def = (hasDomain) ? "In " + MaxUtils.ArrayToWords(sense.Domains) + ", " + definition : definition;
-                                    definitions.Add(def);
-                                }
-                                foreach (string example in sense.Examples)
-                                {
-                                    examples.Add(example);
-                                }
-                            }
-                        }
-                    }
-
-
-                }
-                RandomResponse randomDefinitions = new RandomResponse(definitions);
-                categories.Add(new Category($"what is {Keyword}", randomDefinitions));
-                RandomResponse randomExamples = new RandomResponse(examples);
-                categories.Add(new Category($"{Keyword} sentences examples", randomExamples));
-                MaxBrain maxBrain = new MaxBrain(categories.ToArray());
-                string fileName = @"brain/" + Guid.NewGuid() + ".aiml";
-                maxBrain.save(fileName);
-                new AIMLLoader(Bot).loadAIMLFile(fileName);
-
-            }
-            else
-            {
-
-            }
+            
         }
 
         public string ToXMLString()

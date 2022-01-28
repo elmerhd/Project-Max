@@ -29,6 +29,11 @@ namespace Max
             {
                 textString = text;
             }
+
+            if (App.GetUI() != null)
+            {
+                App.GetUI().UpdateResponseText(textString);
+            }
             speechSynthesizer.Speak(textString);
         }
     }

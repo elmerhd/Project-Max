@@ -18,7 +18,6 @@ namespace AIMLBot.AIMLTagHandlers
     /// </summary>
     public class ponder : AIMLBot.Utils.AIMLTagHandler
     {
-        private Max.OxfordDictionary dictionary;
         private Max.WebScraper.YourDictionary YourDictionary;
         private BrainEngine brainEngine;
 
@@ -40,7 +39,6 @@ namespace AIMLBot.AIMLTagHandlers
             : base(bot, user, query, request, result, templateNode)
         {
             brainEngine =  App.GetEngine().BrainEngine;
-            dictionary = new Max.OxfordDictionary();
             YourDictionary = new WebScraper.YourDictionary();
         }
 
@@ -59,15 +57,11 @@ namespace AIMLBot.AIMLTagHandlers
                         }
                         else
                         {
-                            SearchResult  searchResult =  dictionary.GetResult(query);
                             IList<HtmlNode> nodes = YourDictionary.getResults(query);
 
-                            Thread oxfordLearnThread = new Thread(new ThreadStart(new MaxBrain(this.bot, searchResult, query).LearnIt));
-                            oxfordLearnThread.Start();
-                            Thread scrapingLearnThread = new Thread(new ThreadStart(new MaxBrain(this.bot, nodes, query).LearnIt));
-                            scrapingLearnThread.Start();
 
-                            return getDefinition(searchResult);
+
+                            return string.Empty;
 
                         }
 
@@ -75,20 +69,6 @@ namespace AIMLBot.AIMLTagHandlers
                 }
             }
             return string.Empty;
-        }
-
-        public string getDefinition(SearchResult searchResult)
-        {
-            string definition = "";
-            if (searchResult != null && searchResult.Results.Length > 0)
-            {
-                OxfordDictionariesAPI.Models.Result  result = searchResult.Results.First();
-                LexicalEntry lexicalEntry = result.LexicalEntries.First();
-                Sense[] eachDefinition = lexicalEntry.Entries.First().Senses;
-                definition =  eachDefinition.First().Definitions.First();
-            }
-
-            return definition;
         }
     }
 }

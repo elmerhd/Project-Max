@@ -12,7 +12,7 @@ namespace Max
         public BrainEngine BrainEngine;
 
         public ServerEngine ServerEngine;
-            
+
         public MaxConfig MaxConfig;
 
         public SpotifyEngine SpotifyEngine;
@@ -78,11 +78,11 @@ namespace Max
             else
             {
                 MaxConfig = new MaxConfig();
-                MaxConfig.Voice = "IVONA 2 Brian";
+                MaxConfig.Voice = "IVONA 2 Emma";
                 MaxConfig.AppId = "93e667aa-3452-43a9-a2d7-12ee078fead4";
                 MaxConfig.DefaultSalutation = "sir";
                 MaxConfig.DefaultUserName = "elmer";
-                MaxConfig.Speaker = "Speaker (High Definition Audio)";
+                MaxConfig.Speaker = "Speakers (High Definition Audio Device)";
                 MaxConfig.SpotifyDeviceId = "a28a3bda23a1a3254ebeeec083eb1660cd6da771";
                 MaxConfig.DefaultOnlineMessages.AddRange(new string[] { "I am online and ready, {!salutation}.", "I am now online {!salutation}"});
                 MaxConfig.LoadingMessages.AddRange(new string[] { "Allow me to introduce myself. My name is max. an autonomous computer help program and personal assistant.", "Hello there, My name is max. an autonomous computer help program and personal assistant." });
@@ -108,7 +108,6 @@ namespace Max
             //FaceRecognitionEngine = new FaceRecognitionEngine(this);
             NetflixEngine = new NetflixEngine(this);
             VoiceOutputEngine.Speak(MaxConfig.DefaultOnlineMessages[new Random().Next(MaxConfig.DefaultOnlineMessages.Count)]);
-            App.GetUI().MaxEngine = this;
         }
     }
 
