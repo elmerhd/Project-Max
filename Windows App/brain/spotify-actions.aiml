@@ -7,6 +7,30 @@
 		</template>
 	</category>
 	<category>
+		<pattern>max can you pause the *</pattern>
+		<template>
+			<srai>
+				pause
+			</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>pause * music</pattern>
+		<template>
+			<srai>
+				pause
+			</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>pause * song</pattern>
+		<template>
+			<srai>
+				pause
+			</srai>
+		</template>
+	</category>
+	<category>
 		<pattern>resume</pattern>
 		<template>
 			<music uri="spotify:resume"/>
@@ -50,6 +74,7 @@
 	</category>
 	<category>
 		<pattern>play songs of *</pattern>
+		<set name="topic">music</set>
 		<template>
 			<music uri="spotify:search:artist"/>
 		</template>

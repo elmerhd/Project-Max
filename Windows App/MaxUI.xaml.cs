@@ -48,7 +48,7 @@ namespace Max
         {
             this.Dispatcher.Invoke(()=> {
                 LastSubText = text;
-                SubText.Text = text;
+                ResponseText.Text = text;
             });
         }
 
@@ -56,7 +56,7 @@ namespace Max
         {
             this.Dispatcher.Invoke(() =>
             {
-                SubText2.Text = text;
+                RecognizedText.Text = text;
             });
         }
 

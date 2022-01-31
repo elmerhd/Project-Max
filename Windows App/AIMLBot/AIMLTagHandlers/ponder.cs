@@ -39,7 +39,6 @@ namespace AIMLBot.AIMLTagHandlers
             : base(bot, user, query, request, result, templateNode)
         {
             brainEngine =  App.GetEngine().BrainEngine;
-            YourDictionary = new WebScraper.YourDictionary();
         }
 
         protected override string ProcessChange()
@@ -57,7 +56,6 @@ namespace AIMLBot.AIMLTagHandlers
                         }
                         else
                         {
-                            IList<HtmlNode> nodes = YourDictionary.getResults(query);
 
 
 

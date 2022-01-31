@@ -42,6 +42,10 @@ namespace Max
         public void analyze(ServerResponse serverResponse)
         {
             Log($"Analyzing = {serverResponse.Message}");
+            if (App.GetUI() != null)
+            {
+                App.GetUI().UpdateRecognizedText(serverResponse.Message);
+            }
             string response = getResponse(serverResponse.Message);
             MaxEngine.VoiceOutputEngine.Speak(response);
         }

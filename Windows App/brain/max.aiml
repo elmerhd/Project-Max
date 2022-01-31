@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<aiml>
+	<category>
+		<pattern>hello max</pattern>
+		<template>
+			<random>
+				<li>hello {!salutation}</li>
+				<li>hello {!salutation}. what can i do for you?</li>
+			</random>
+		</template>
+	</category>
+	<category>
+		<pattern>good morning max</pattern>
+		<set name="topic">morning greetings</set>
+		<template>
+			<random>
+				<li>good morning {!salutation}</li>
+				<li>
+					<srai>hello max</srai>
+				</li>
+				<li>
+					good morning, any <set name="topic">plans today {!salutation}?</set>
+				</li>
+			</random>
+		</template>
+	</category>
+	<category>
+		<pattern>what is the weather in davao city</pattern>
+		<that>morning greetings</that>
+		<template>
+			<system action="checkWeather"/>
+		</template>
+	</category>
+	<category>
+		<pattern>*</pattern>
+		<that>good morning, any plans today {!salutation}?</that>
+		<template>
+			<random>
+				<li>
+					i hope your plans will work out.
+				</li>
+				<li>
+					hope you have a productive day {!salutation}
+				</li>
+			</random>
+		</template>
+	</category>
+</aiml>

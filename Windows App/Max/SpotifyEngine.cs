@@ -3,11 +3,13 @@ using SpotifyAPI.Web.Auth;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Timers;
 
 namespace Max
 {
     public class SpotifyEngine
     {
+        private const string SpotifyAppId = "SpotifyAB.SpotifyMusic_zpdnekdrzrea0!Spotify";
         protected const string _clientId = "fd64e2aea7934ffa9199c7e96edc4cf1";
         protected const string _secretId = "f8bafcdf1f694c33b4708bb6e603dc58";
         private SpotifyClient Spotify;
@@ -16,6 +18,7 @@ namespace Max
         private string PlaylistFile = "spotify-playlist.aiml";
         private string AvailableDeviceId = null;
         private List<Device> AvailableDevices;
+        private Timer Timer { get; set; }
 
         public SpotifyEngine(MaxEngine maxEngine)
         {
@@ -23,6 +26,11 @@ namespace Max
             FixPlaylistFile();
             OpenConnection();
             maxEngine.BrainEngine.Log($"Loading {nameof(SpotifyEngine)}");
+        }
+
+        public void OpenSpotify()
+        {
+            MaxEngine.AppEngine.OpenApp(SpotifyAppId);
         }
         public void FixPlaylistFile()
         {
@@ -126,12 +134,15 @@ namespace Max
 
         public async void TransferPlayback(string devicetypeorname)
         {
+            App.GetEngine().BrainEngine.Log(devicetypeorname);
             DeviceResponse deviceResponse = await Spotify.Player.GetAvailableDevices();
             AvailableDevices = deviceResponse.Devices;
             List<string> deviceIds = new List<string>();
             foreach (Device dv in deviceResponse.Devices)
             {
-                if (dv.IsActive && !dv.IsRestricted && (dv.Type.ToLower().Contains(devicetypeorname) || dv.Type.ToLower().Contains(devicetypeorname)))
+                App.GetEngine().BrainEngine.Log(dv.Type);
+                App.GetEngine().BrainEngine.Log(dv.Name);
+                if (dv.IsActive && !dv.IsRestricted && (dv.Name.ToLower().Contains(devicetypeorname) || dv.Type.ToLower().Contains(devicetypeorname)))
                 {
                     AvailableDeviceId = dv.Id;
                     deviceIds.Add(dv.Id);
@@ -186,7 +197,7 @@ namespace Max
 
         public async void BrowseTrack(string track, string artist)
         {
-            var searchResponse = await Spotify.Search.Item(new SearchRequest(SearchRequest.Types.Track, $"{track} - {artist}") { Limit = 3});
+            var searchResponse = await Spotify.Search.Item(new SearchRequest(SearchRequest.Types.Track, $"{track} - {artist}") { Limit = 3 });
             List<FullTrack> tracks = searchResponse.Tracks.Items;
             if (tracks.Count > 0)
             {

@@ -78,23 +78,18 @@ namespace AIMLBot.AIMLTagHandlers
                 else if (uri == "spotify:search:artist")
                 {
                     string key = this.query.InputStar[0];
-                    System.Console.WriteLine(key);
                     MaxEngine.SpotifyEngine.BrowseArtists(key);
                 }
                 else if (uri == "spotify:search:track")
                 {
                     string track = this.query.InputStar[1];
                     string artist = this.query.InputStar[0];
-                    System.Console.WriteLine(track);
-                    System.Console.WriteLine(artist);
                     MaxEngine.SpotifyEngine.BrowseTrack(track, artist);
                 }
                 else if (uri == "spotify:search:album")
                 {
                     string album = this.query.InputStar[1];
                     string artist = this.query.InputStar[0];
-                    System.Console.WriteLine(album);
-                    System.Console.WriteLine(artist);
                     MaxEngine.SpotifyEngine.BrowseAlbum(album, artist);
                 }
                 else

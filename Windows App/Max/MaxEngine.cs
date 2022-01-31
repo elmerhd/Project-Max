@@ -85,7 +85,7 @@ namespace Max
                 MaxConfig.Speaker = "Speakers (High Definition Audio Device)";
                 MaxConfig.SpotifyDeviceId = "a28a3bda23a1a3254ebeeec083eb1660cd6da771";
                 MaxConfig.DefaultOnlineMessages.AddRange(new string[] { "I am online and ready, {!salutation}.", "I am now online {!salutation}"});
-                MaxConfig.LoadingMessages.AddRange(new string[] { "Allow me to introduce myself. My name is max. an autonomous computer help program and personal assistant.", "Hello there, My name is max. an autonomous computer help program and personal assistant." });
+                MaxConfig.LoadingMessages.AddRange(new string[] { "Allow me to introduce myself. My name is max, an autonomous computer help program and personal assistant.", "Hello there, My name is max. an autonomous computer help program and personal assistant." });
                 MaxConfig.DefaultResponses.AddRange(new string[] { " Yes, {!salutation}.", "Okay, {!salutation}.", "Right away, {!salutation}.", "As you wish, {!salutation}.", "I'm on it.", "Just a second, {!salutation}.", "For you {!salutation}, anything." , "One moment {!salutation}." });
                 MaxConfig.FacePhotosPath = FacesFolder;
                 MaxConfig.FaceListTextFile = $"{FacesFolder}/{FaceFile}";
@@ -98,10 +98,10 @@ namespace Max
 
         public void Load()
         {
-            MaxUtils.PlayWelcomeAudio();
+            //MaxUtils.PlayWelcomeAudio();
             BrainEngine = new BrainEngine(this);
             VoiceOutputEngine = new VoiceEngine(this);
-            VoiceOutputEngine.Speak(MaxConfig.LoadingMessages[new Random().Next(MaxConfig.LoadingMessages.Count)]);
+            //VoiceOutputEngine.Speak(MaxConfig.LoadingMessages[new Random().Next(MaxConfig.LoadingMessages.Count)]);
             SpotifyEngine = new SpotifyEngine(this);
             AppEngine = new AppEngine(this);
             ServerEngine = new ServerEngine(this);

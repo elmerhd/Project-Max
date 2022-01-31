@@ -17,6 +17,8 @@ using Android.Support.V4.Content;
 using Android;
 using Android.Content.PM;
 using System.Net.Sockets;
+using Android.Media;
+using Android.Media.Session;
 
 namespace Max
 {
@@ -28,6 +30,7 @@ namespace Max
 		private static readonly string CHANNEL_ID = "maxai_notification";
 		private static readonly int NOTIFICATION_ID = 1000;
 
+		private MediaButtonBroadcastReceiver MediaButtonBroadcastReceiver;
 		private ImageButton BtnMic;
 		public static SpeechRecognizer Recognizer { get; set; }
 		public static Intent SpeechIntent { get; set; }
@@ -37,6 +40,7 @@ namespace Max
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
+			Console.WriteLine("Test");
 			Xamarin.Essentials.Platform.Init(this, savedInstanceState);
 			// Set our view from the "main" layout resource
 			SetContentView(Resource.Layout.activity_main);
@@ -48,7 +52,7 @@ namespace Max
 		public void InitComponents()
 		{
 			CreateNotificationChannel();
-
+			CreateBroadcastChannel();
 			BtnMic = FindViewById<ImageButton>(id: Resource.Id.imageButtonMic);
 			BtnMic.Click += BtnMic_Click;
 
@@ -67,6 +71,28 @@ namespace Max
 
 		}
 
+        protected override void OnResume()
+        {
+            base.OnResume();
+			//RegisterReceiver(MediaButtonBroadcastReceiver, new IntentFilter("com.junk.application.max"));
+		}
+
+        protected override void OnPause()
+        {
+			//UnregisterReceiver(MediaButtonBroadcastReceiver);
+			base.OnPause();
+        }
+
+        private void CreateBroadcastChannel()
+		{
+			//MediaButtonBroadcastReceiver = new MediaButtonBroadcastReceiver();
+			//RegisterReceiver(MediaButtonBroadcastReceiver, new IntentFilter("com.junk.application.max"));
+			MediaSession ms = new MediaSession(ApplicationContext, PackageName);
+			ms.Active = true;
+			ms.SetCallback(new myMediaSession());
+			ms.SetFlags(MediaSessionFlags.HandlesMediaButtons | MediaSessionFlags.HandlesTransportControls);
+			ms.Active = true;
+		}
 
 
 		private void CreateNotificationChannel()
@@ -200,5 +226,15 @@ namespace Max
 
 
 	}
+	class myMediaSession : MediaSession.Callback
+	{
 
+		public override bool OnMediaButtonEvent(Intent mediaButtonIntent)
+		{
+
+			MainActivity.Recognizer.StartListening(MainActivity.SpeechIntent);
+			return base.OnMediaButtonEvent(mediaButtonIntent);
+		}
+
+	}
 }

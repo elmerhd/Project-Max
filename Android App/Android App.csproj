@@ -67,6 +67,8 @@
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
     <Compile Include="Max\API.cs" />
+    <Compile Include="Max\MaxWidget.cs" />
+    <Compile Include="Max\MediaButtonBroadcastReceiver.cs" />
     <Compile Include="Max\ServerRequest.cs" />
     <Compile Include="Max\ServerResponse.cs" />
     <Compile Include="Max\SMSReceiver.cs" />
@@ -105,7 +107,6 @@
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_foreground.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_round.png" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <PackageReference Include="Microsoft.Net.Http">
       <Version>2.2.29</Version>
@@ -144,6 +145,16 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\MaxButtonReady.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\max_widget.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="xml\max_widget_provider.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

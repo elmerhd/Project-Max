@@ -14,7 +14,6 @@
         ResizeMode="NoResize" 
         ContentRendered="OnContentRendered"
         WindowState="Maximized"
-        Topmost="True"
         >
 
     <Window.Background>
@@ -136,7 +135,7 @@
 
         </Grid>
         <TextBlock 
-            x:Name="SubText" 
+            x:Name="ResponseText" 
             Margin="10,0,10,10" 
             Text="" 
             TextWrapping="Wrap" 
@@ -147,7 +146,7 @@
             FontSize="35"
             TextAlignment="Center"/>
         <TextBlock 
-            x:Name="SubText2"
+            x:Name="RecognizedText"
             Margin="10,0,10,107" 
             Text="" 
             TextWrapping="Wrap"
