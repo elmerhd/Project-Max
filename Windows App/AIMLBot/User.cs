@@ -9,8 +9,6 @@ namespace AIMLBot
     /// </summary>
     public class User
     {
-        #region Attributes
-
         /// <summary>
         /// The local instance of the GUID that identifies this user to the bot
         /// </summary>
@@ -67,11 +65,6 @@ namespace AIMLBot
                 }
             }
         }
-
-		#endregion
-		
-		#region Methods
-
         /// <summary>
         /// Ctor
         /// </summary>
@@ -193,6 +186,5 @@ namespace AIMLBot
         {
             this.Results.Insert(0, latestResult);
         }
-        #endregion
     }
 }

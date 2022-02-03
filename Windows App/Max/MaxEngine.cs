@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 
 namespace Max
 {
@@ -85,8 +86,10 @@ namespace Max
                 MaxConfig.Speaker = "Speakers (High Definition Audio Device)";
                 MaxConfig.SpotifyDeviceId = "a28a3bda23a1a3254ebeeec083eb1660cd6da771";
                 MaxConfig.DefaultOnlineMessages.AddRange(new string[] { "I am online and ready, {!salutation}.", "I am now online {!salutation}"});
-                MaxConfig.LoadingMessages.AddRange(new string[] { "Allow me to introduce myself. My name is max, an autonomous computer help program and personal assistant.", "Hello there, My name is max. an autonomous computer help program and personal assistant." });
-                MaxConfig.DefaultResponses.AddRange(new string[] { " Yes, {!salutation}.", "Okay, {!salutation}.", "Right away, {!salutation}.", "As you wish, {!salutation}.", "I'm on it.", "Just a second, {!salutation}.", "For you {!salutation}, anything." , "One moment {!salutation}." });
+                MaxConfig.DefaultOKMessages.AddRange(new string[] { "Yes, {!salutation}.", "Okay, {!salutation}.", "For you {!salutation}, anything.", "Go ahead, {!salutation}.", "I'm Listening.", "I'm Listening, {!salutation}."});
+                MaxConfig.DefaultIntroductionMessages.AddRange(new string[] { "Allow me to introduce myself. My name is max, an autonomous computer help program and personal assistant.", "Hello there, My name is max. an autonomous computer help program and personal assistant." });
+                MaxConfig.DefaultCommandMessages.AddRange(new string[] { " Yes, {!salutation}.", "Okay, {!salutation}.", "Right away, {!salutation}.", "As you wish, {!salutation}.", "I'm on it.", "Just a second, {!salutation}.", "For you {!salutation}, anything." , "One moment {!salutation}." });
+                MaxConfig.DefaultWaitingMessages.AddRange(new string[] { "One moment {!salutation}", "I'm on it." , "Just a second, {!salutation}", "Checking {!salutation}", "Yes, I can do it.", "For you {!salutation} anything"});
                 MaxConfig.FacePhotosPath = FacesFolder;
                 MaxConfig.FaceListTextFile = $"{FacesFolder}/{FaceFile}";
                 MaxConfig.HaarCascadePath = $"{ConfigFolder}/{HaarCascadeFile}";
@@ -98,16 +101,18 @@ namespace Max
 
         public void Load()
         {
-            //MaxUtils.PlayWelcomeAudio();
+            new Thread(MaxUtils.WaitingSound.Play).Start();
             BrainEngine = new BrainEngine(this);
             VoiceOutputEngine = new VoiceEngine(this);
-            //VoiceOutputEngine.Speak(MaxConfig.LoadingMessages[new Random().Next(MaxConfig.LoadingMessages.Count)]);
+            VoiceOutputEngine.Speak(MaxConfig.DefaultIntroductionMessages[new Random().Next(MaxConfig.DefaultIntroductionMessages.Count)]);
             SpotifyEngine = new SpotifyEngine(this);
             AppEngine = new AppEngine(this);
             ServerEngine = new ServerEngine(this);
             //FaceRecognitionEngine = new FaceRecognitionEngine(this);
             NetflixEngine = new NetflixEngine(this);
             VoiceOutputEngine.Speak(MaxConfig.DefaultOnlineMessages[new Random().Next(MaxConfig.DefaultOnlineMessages.Count)]);
+            MaxUtils.WaitingSound.Stop();
+            
         }
     }
 
@@ -120,8 +125,10 @@ namespace Max
         public List<string> DefaultOnlineMessages { get; set; }
         public string Speaker { get; set; }
         public string SpotifyDeviceId { get; set; }
-        public List<string> DefaultResponses { get; set; }
-        public List<string> LoadingMessages { get; set; }
+        public List<string> DefaultCommandMessages { get; set; }
+        public List<string> DefaultIntroductionMessages { get; set; }
+        public List<string> DefaultWaitingMessages { get; set; }
+        public List<string> DefaultOKMessages { get; set; }
         public string FacePhotosPath { get; set; }
         public string FaceListTextFile { get; set; }
         public string HaarCascadePath { get; set; }
@@ -131,9 +138,11 @@ namespace Max
 
         public MaxConfig()
         {
-            DefaultResponses = new List<string>();
-            LoadingMessages = new List<string>();
+            DefaultCommandMessages = new List<string>();
+            DefaultIntroductionMessages = new List<string>();
             DefaultOnlineMessages = new List<string>();
+            DefaultWaitingMessages = new List<string>();
+            DefaultOKMessages = new List<string>();
         }
 
         public static void WriteConfig(MaxConfig conf, string file)

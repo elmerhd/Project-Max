@@ -96,7 +96,7 @@ namespace AIMLBot.AIMLTagHandlers
                 {
                     MaxEngine.SpotifyEngine.Play(uri);
                 }
-                return MaxEngine.MaxConfig.DefaultResponses[new Random().Next(MaxEngine.MaxConfig.DefaultResponses.Count)];
+                return MaxEngine.MaxConfig.DefaultCommandMessages[new Random().Next(MaxEngine.MaxConfig.DefaultCommandMessages.Count)];
             }
             return string.Empty;
         }

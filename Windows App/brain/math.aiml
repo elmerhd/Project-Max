@@ -1,4 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <aiml>
-	
+	<category>
+		<pattern>what is  *</pattern>
+		<template>
+			the answer is <ponder type="math"/>
+		</template>
+	</category>
+	<category>
+		<pattern>max can you solve this math problem</pattern>
+		<template>
+			<ponder type="solveIt"/>
+		</template>
+	</category>
+	<category>
+		<pattern>max can you solve this math problem</pattern>
+		<that></that>
+		<template>
+			<ponder type="solveIt"/>
+		</template>
+	</category>
 </aiml>

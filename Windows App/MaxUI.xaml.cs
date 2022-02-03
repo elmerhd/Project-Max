@@ -35,6 +35,7 @@ namespace Max
             InitializeComponent();
             MaxDataContext = new DataContext();
             this.DataContext = MaxDataContext;
+
         }
 
         public MaxUI(MaxEngine maxEngine)
@@ -60,6 +61,20 @@ namespace Max
             });
         }
 
+        public void ShowUI() {
+            this.Dispatcher.Invoke(() =>
+            {
+                Show();
+            });
+        }
+
+        public void HideUI()
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                Hide();
+            });
+        }
 
         private void OnContentRendered(object sender, EventArgs e)
         {

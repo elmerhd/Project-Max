@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<aiml>
+	<category>
+		<pattern>check my internet</pattern>
+		<template>
+			<system action="checkInternet"/>
+		</template>
+	</category>
+	<category>
+		<pattern>can you check my internet speed</pattern>
+		<template>
+			<srai>check my internet</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>max can you check my internet speed</pattern>
+		<template>
+			<srai>check my internet</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>max can you check the internet speed</pattern>
+		<template>
+			<srai>check my internet</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>hey max</pattern>
+		<template>
+			<system action="showUI"/>
+		</template>
+	</category>
+	<category>
+		<pattern>hey max show yourself</pattern>
+		<template>
+			<srai>hey max</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>go idle</pattern>
+		<template>
+			<system action="hideUI"/>
+		</template>
+	</category>
+	<category>
+		<pattern>leave me alone</pattern>
+		<template>
+			<srai>go idle</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>hello max</pattern>
+		<template>
+			<random>
+				<li>hello {!salutation}</li>
+				<li>hello {!salutation}. what can i do for you?</li>
+			</random>
+		</template>
+	</category>
+	<category>
+		<pattern>good morning max</pattern>
+		<set name="topic">morning greetings</set>
+		<template>
+			<random>
+				<li>good morning {!salutation}</li>
+				<li>
+					<srai>hello max</srai>
+				</li>
+				<li>
+					good morning, any <set name="topic">plans today {!salutation}?</set>
+				</li>
+			</random>
+		</template>
+	</category>
+	<category>
+		<pattern>what is the weather in *</pattern>
+		<template>
+			<system action="checkWeather"/>
+		</template>
+	</category>
+	<category>
+		<pattern>max shut down computer</pattern>
+		<template>
+			<system action="shutdown"/>
+		</template>
+	</category>
+	<category>
+		<pattern>max restart computer</pattern>
+		<template>
+			<system action="restart"/>
+		</template>
+	</category>
+	<category>
+		<pattern>*</pattern>
+		<that>good morning, any plans today {!salutation}?</that>
+		<template>
+			<random>
+				<li>
+					i hope your plans will work out.
+				</li>
+				<li>
+					hope you have a productive day {!salutation}
+				</li>
+			</random>
+		</template>
+	</category>
+</aiml>

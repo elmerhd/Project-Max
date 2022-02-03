@@ -2,8 +2,10 @@
 using SpotifyAPI.Web.Auth;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Timers;
+using System.Windows.Automation;
 
 namespace Max
 {
@@ -25,7 +27,24 @@ namespace Max
             this.MaxEngine = maxEngine;
             FixPlaylistFile();
             OpenConnection();
+            Timer = new Timer();
+            Timer.Interval = 1800000;
+            Timer.Elapsed += TokenTimer;
+            Timer.Start();
             maxEngine.BrainEngine.Log($"Loading {nameof(SpotifyEngine)}");
+        }
+
+        private void TokenTimer(object sender, ElapsedEventArgs e)
+        {
+            try
+            {
+                OpenConnection();
+            }
+            catch (Exception ex)
+            {
+                MaxEngine.BrainEngine.Log($"Error : {nameof(SpotifyEngine)} : {ex.Message}");
+            }
+
         }
 
         public void OpenSpotify()
@@ -65,6 +84,31 @@ namespace Max
                 Scope = new[] { Scopes.AppRemoteControl, Scopes.PlaylistModifyPrivate, Scopes.PlaylistModifyPublic, Scopes.PlaylistReadCollaborative, Scopes.PlaylistReadPrivate, Scopes.Streaming, Scopes.UgcImageUpload, Scopes.UserFollowModify, Scopes.UserFollowRead, Scopes.UserLibraryModify, Scopes.UserLibraryRead, Scopes.UserModifyPlaybackState, Scopes.UserReadCurrentlyPlaying, Scopes.UserReadEmail, Scopes.UserReadPlaybackPosition, Scopes.UserReadPlaybackState, Scopes.UserReadPrivate, Scopes.UserReadRecentlyPlayed, Scopes.UserTopRead }
             };
             BrowserUtil.Open(loginRequest.ToUri());
+
+            Process[] procsEdge = Process.GetProcessesByName("msedge");
+            foreach (Process Edge in procsEdge)
+            {
+                if (Edge.MainWindowHandle != IntPtr.Zero)
+                {
+                    AutomationElement root = AutomationElement.FromHandle(Edge.MainWindowHandle);
+                    var tabs = root.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.TabItem));
+                    var elmUrl = root.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.NameProperty, "Address and search bar"));
+                    foreach (AutomationElement tabitem in tabs)
+                    {
+                        if (elmUrl != null)
+                        {
+                            AutomationPattern[] patterns = elmUrl.GetSupportedPatterns();
+                            if (patterns.Length > 0)
+                            {
+                                ValuePattern val = (ValuePattern)elmUrl.GetCurrentPattern(patterns[0]);
+                                string url = val.Current.Value;
+                                App.GetEngine().BrainEngine.Log($"Found {url} : {url.Contains("localhost:5000/callback?code")}");
+                            }
+                        }
+                        tabitem.SetFocus();
+                    }
+                }
+            }
         }
 
         public async void GetAvailableDeviceID()
@@ -134,14 +178,11 @@ namespace Max
 
         public async void TransferPlayback(string devicetypeorname)
         {
-            App.GetEngine().BrainEngine.Log(devicetypeorname);
             DeviceResponse deviceResponse = await Spotify.Player.GetAvailableDevices();
             AvailableDevices = deviceResponse.Devices;
             List<string> deviceIds = new List<string>();
             foreach (Device dv in deviceResponse.Devices)
             {
-                App.GetEngine().BrainEngine.Log(dv.Type);
-                App.GetEngine().BrainEngine.Log(dv.Name);
                 if (dv.IsActive && !dv.IsRestricted && (dv.Name.ToLower().Contains(devicetypeorname) || dv.Type.ToLower().Contains(devicetypeorname)))
                 {
                     AvailableDeviceId = dv.Id;

@@ -36,7 +36,7 @@ namespace AIMLBot.AIMLTagHandlers
             {
                 string key = this.query.InputStar[0];
                 MaxEngine.NetflixEngine.Play(MaxEngine.NetflixEngine.Search(key));
-                return MaxEngine.MaxConfig.DefaultResponses[new Random().Next(MaxEngine.MaxConfig.DefaultResponses.Count)];
+                return MaxEngine.MaxConfig.DefaultCommandMessages[new Random().Next(MaxEngine.MaxConfig.DefaultCommandMessages.Count)];
             }
             return string.Empty;
         }

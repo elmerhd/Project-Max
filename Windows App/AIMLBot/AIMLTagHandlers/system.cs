@@ -1,6 +1,9 @@
 using System;
 using System.Xml;
 using System.Text;
+using Max;
+using System.Threading;
+using System.Diagnostics;
 
 namespace AIMLBot.AIMLTagHandlers
 {
@@ -9,6 +12,7 @@ namespace AIMLBot.AIMLTagHandlers
     /// </summary>
     public class system : AIMLBot.Utils.AIMLTagHandler
     {
+        public MaxEngine MaxEngine;
         /// <summary>
         /// Ctor
         /// </summary>
@@ -26,11 +30,41 @@ namespace AIMLBot.AIMLTagHandlers
                         XmlNode templateNode)
             : base(bot, user, query, request, result, templateNode)
         {
+            MaxEngine = App.GetEngine();
         }
 
         protected override string ProcessChange()
         {
-            this.bot.writeToLog("The system tag is not implemented in this bot");
+            if (this.templateNode.Name.ToLower() == "system")
+            {
+                string uri = this.templateNode.Attributes["action"].Value;
+                if (uri.Equals("checkInternet"))
+                {
+                    new Thread(new MaxInternetSpeedTest().StartService).Start();
+                }
+                else if (uri.Equals("checkWeather"))
+                {
+                    string location = this.query.InputStar[0];
+                    new Thread(new MaxWeather(location).StartService).Start();
+                }
+                else if (uri.Equals("shutdown"))
+                {
+                    new Thread(MaxUtils.Shutdown).Start();
+                }
+                else if (uri.Equals("restart"))
+                {
+                    Process.Start("restart", "/s /t 0");
+                }
+                else if (uri.Equals("showUI"))
+                {
+                    App.GetUI().ShowUI();
+                }
+                else if (uri.Equals("hideUI"))
+                {
+                    App.GetUI().HideUI();
+                }
+                return MaxEngine.MaxConfig.DefaultCommandMessages[new Random().Next(MaxEngine.MaxConfig.DefaultCommandMessages.Count)];
+            }
             return string.Empty;
         }
     }

@@ -45,7 +45,7 @@ namespace AIMLBot.AIMLTagHandlers
             {
                 string id = this.templateNode.Attributes["id"].Value;
                 MaxEngine.AppEngine.OpenApp(id);
-                return MaxEngine.MaxConfig.DefaultResponses[new Random().Next(MaxEngine.MaxConfig.DefaultResponses.Count)];
+                return MaxEngine.MaxConfig.DefaultCommandMessages[new Random().Next(MaxEngine.MaxConfig.DefaultCommandMessages.Count)];
             }
             return string.Empty;
         }

@@ -14,6 +14,7 @@
         ResizeMode="NoResize" 
         ContentRendered="OnContentRendered"
         WindowState="Maximized"
+        Topmost="True"
         >
 
     <Window.Background>
@@ -112,7 +113,7 @@
                         </EventTrigger>
                     </Border.Triggers>
                 </Border>
-                <Ellipse  x:Name="MaxCircle" Width="{Binding ActualWidth}" Height="{Binding ActualHeight}" Margin="10 10 10 10" StrokeThickness="10">
+                <Ellipse  x:Name="MaxCircle" Width="{Binding ActualWidth}" Height="{Binding ActualHeight}" Margin="10,10,10,10" StrokeThickness="10">
                     <Ellipse.Fill>
                         <SolidColorBrush Color="Black" Opacity="1"/>
                     </Ellipse.Fill>

@@ -47,21 +47,19 @@ namespace AIMLBot.AIMLTagHandlers
             {
                 if (this.query.InputStar.Count > 0)
                 {
-                    if (this.templateNode.Attributes.Count == 0)
+                    string type = this.templateNode.Attributes["type"].Value;
+                    string query = this.query.InputStar[0];
+
+                    App.GetEngine().BrainEngine.Log($"Ponder : {type} : {query}");
+                    App.GetEngine().BrainEngine.Log($"HasEquation : {MaxUtils.HasEquation(query)}");
+                    
+                    if (MaxUtils.HasEquation(query) && type.Equals("math"))
                     {
-                        string query = this.query.InputStar[0];
-                        if (MaxUtils.HasEquation(query))
-                        {
-
-                        }
-                        else
-                        {
-
-
-
-                            return string.Empty;
-
-                        }
+                        return MaxUtils.SolveEquation(query);
+                    }
+                    else
+                    {
+                        return string.Empty;
 
                     }
                 }

@@ -13,7 +13,9 @@ namespace Max
         private static MaxUI MaxUI;
         public App()
         {
+
             MaxEngine = new MaxEngine();
+            MaxUI = new MaxUI();
             Thread thread = new Thread(new ThreadStart(MaxEngine.Load));
             thread.Start();
         }
@@ -43,7 +45,6 @@ namespace Max
             }
             if (showUI)
             {
-                MaxUI = new MaxUI();
                 MaxUI.Show();
             }
         }

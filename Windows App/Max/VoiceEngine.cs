@@ -1,4 +1,6 @@
-﻿using System.Speech.Synthesis;
+﻿using System;
+using System.Speech.Recognition;
+using System.Speech.Synthesis;
 
 namespace Max
 {
@@ -6,15 +8,16 @@ namespace Max
     {
         private MaxEngine MaxEngine;
 
-        public SpeechSynthesizer speechSynthesizer { get; set; }
-
+        public SpeechSynthesizer SpeechSynthesizer { get; set; }
 
         public VoiceEngine(MaxEngine maxEngine)
         {
             this.MaxEngine = maxEngine;
-            speechSynthesizer = new SpeechSynthesizer();
-            speechSynthesizer.SelectVoice("IVONA 2 Kimberly");
-            speechSynthesizer.Volume = 100;
+            SpeechSynthesizer = new SpeechSynthesizer();
+            SpeechSynthesizer.SelectVoice("IVONA 2 Kimberly");
+            SpeechSynthesizer.Volume = 100;
+
+            
             maxEngine.BrainEngine.Log($"Loading {nameof(VoiceEngine)}");
         }
 
@@ -34,7 +37,7 @@ namespace Max
             {
                 App.GetUI().UpdateResponseText(textString);
             }
-            speechSynthesizer.Speak(textString);
+            SpeechSynthesizer.Speak(textString);
         }
     }
 }
