@@ -36,6 +36,8 @@ namespace Max
             maxEngine.BrainEngine.Log($"Loading {nameof(ServerEngine)}");
         }
 
+
+
         
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
@@ -49,7 +51,15 @@ namespace Max
                 if (content.UUIDv4 != ServerResponse.UUIDv4)
                 {
                     ServerResponse = content;
-                    MaxEngine.BrainEngine.analyze(content);
+                    bool hasTime = MaxUtils.CheckHasTime(content.Message);
+                    if (hasTime)
+                    {
+                        MaxEngine.BrainEngine.Analyze(content, hasTime);
+                    } 
+                    else
+                    {
+                        MaxEngine.BrainEngine.Analyze(content);
+                    }
                 }
             }
             catch (Exception ex)

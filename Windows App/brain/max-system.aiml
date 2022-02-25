@@ -7,6 +7,36 @@
 		</template>
 	</category>
 	<category>
+		<pattern>set an alarm at *</pattern>
+		<template>
+			<system action="setAlarm"/>
+		</template>
+	</category>
+	<category>
+		<pattern>check my calendar</pattern>
+		<template>
+			<system action="checkCalendar"/>
+		</template>
+	</category>
+	<category>
+		<pattern>wake me up at *</pattern>
+		<template>
+			<system action="setAlarm"/>
+		</template>
+	</category>
+	<category>
+		<pattern>set an alarm * at *</pattern>
+		<template>
+			<system action="setAlarm"/>
+		</template>
+	</category>
+	<category>
+		<pattern>unlock the windows</pattern>
+		<template>
+			<system action="unlockWindows"/>
+		</template>
+	</category>
+	<category>
 		<pattern>can you check my internet speed</pattern>
 		<template>
 			<srai>check my internet</srai>
@@ -27,13 +57,19 @@
 	<category>
 		<pattern>hey max</pattern>
 		<template>
+			I am listening, {!salutation}.
+		</template>
+	</category>
+	<category>
+		<pattern>show yourself</pattern>
+		<template>
 			<system action="showUI"/>
 		</template>
 	</category>
 	<category>
 		<pattern>hey max show yourself</pattern>
 		<template>
-			<srai>hey max</srai>
+			<system action="showUI"/>
 		</template>
 	</category>
 	<category>
@@ -53,22 +89,7 @@
 		<template>
 			<random>
 				<li>hello {!salutation}</li>
-				<li>hello {!salutation}. what can i do for you?</li>
-			</random>
-		</template>
-	</category>
-	<category>
-		<pattern>good morning max</pattern>
-		<set name="topic">morning greetings</set>
-		<template>
-			<random>
-				<li>good morning {!salutation}</li>
-				<li>
-					<srai>hello max</srai>
-				</li>
-				<li>
-					good morning, any <set name="topic">plans today {!salutation}?</set>
-				</li>
+				<li>hello {!salutation}, what can i do for you?</li>
 			</random>
 		</template>
 	</category>
@@ -88,20 +109,6 @@
 		<pattern>max restart computer</pattern>
 		<template>
 			<system action="restart"/>
-		</template>
-	</category>
-	<category>
-		<pattern>*</pattern>
-		<that>good morning, any plans today {!salutation}?</that>
-		<template>
-			<random>
-				<li>
-					i hope your plans will work out.
-				</li>
-				<li>
-					hope you have a productive day {!salutation}
-				</li>
-			</random>
 		</template>
 	</category>
 </aiml>

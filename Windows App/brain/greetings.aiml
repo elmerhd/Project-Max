@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<aiml>
+	<!--<category>
+		<pattern>good morning</pattern>
+		<template>
+			<think>
+				<set name="hour">
+					<date format="%H"/>
+				</set>
+			</think>
+			<condition name="hour">
+				<li value="00">Hello, it's more like the middle of the night than morning. How are you this morning?</li>
+				<li value="01">Hello, it's only just morning. How are you this morning?</li>
+				<li value="02">Hello and how are you this morning?</li>
+				<li value="03">Hello and how are you this morning?</li>
+				<li value="04">Hello and how are you this morning?</li>
+				<li value="05">Hello and how are you this morning?</li>
+				<li value="06">Hello and how are you this morning?</li>
+				<li value="07">Hello and how are you this morning?</li>
+				<li value="08">Hello and how are you this morning?</li>
+				<li value="09">Hello and how are you this morning?</li>
+				<li value="10">Hello and how are you this morning?</li>
+				<li value="11">Hello and how are you this morning?</li>
+				<li value="12">You're a bit late. It's lunchtime here.</li>
+				<li value="13">Morning?! It's the afternoon here.</li>
+				<li value="14">Morning?! It's the afternoon here.</li>
+				<li value="15">Morning?! It's the afternoon here.</li>
+				<li value="16">Morning?! It's the afternoon here.</li>
+				<li value="17">Morning?! It's nearly evening.</li>
+				<li value="18">Morning?! It's evening here.</li>
+				<li value="19">Morning?! It's evening here.</li>
+				<li value="20">Morning?! It's evening here.</li>
+				<li value="21">Morning?! It's night time here.</li>
+				<li value="22">Morning?! It's night time here.</li>
+				<li value="23">Morning?! It's night time here.</li>
+			</condition>
+		</template>
+	</category>-->
+	
+	<category>
+		<pattern>good *</pattern>
+		<think>
+			<set name="greetings">
+				<star/>
+			</set>
+		</think>
+		<template>
+			<greetings/>
+		</template>
+	</category>
+	
+
+	<category>
+		<pattern>plans *</pattern>
+		<template>
+			<think>
+				<set name="greetings">
+					<star/>
+				</set>
+			</think>
+			<condition name="greetings" value="morning">
+				<think>
+					<set name="topic">
+						<star/>
+					</set>
+				</think>
+				<random>
+					<li>
+						<greetings/>
+					</li>
+				</random>
+			</condition>
+			<condition name="greetings" value="afternoon">
+				<think>
+					<set name="topic">
+						<star/>
+					</set>
+				</think>
+				good afternoon
+			</condition>
+		</template>
+	</category>
+	<topic name="planstoday">
+		<category>
+			<pattern>_</pattern>
+			<template>
+				<think>
+					<set name="inp">
+						<star/>
+					</set>
+				</think>
+				<condition name="inp">
+					<li value="meetings">
+						ok, i'll start talking again.<set name="topic"></set>
+					</li>
+					
+					<li>
+						<random>
+							<li>hope you have a productive day {!salutation}</li>
+						</random>
+					</li>
+				</condition>
+			</template>
+		</category>
+	</topic>
+</aiml>

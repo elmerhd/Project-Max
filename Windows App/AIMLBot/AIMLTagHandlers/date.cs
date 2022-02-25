@@ -35,7 +35,18 @@ namespace AIMLBot.AIMLTagHandlers
         {
             if (this.templateNode.Name.ToLower() == "date")
             {
-                return DateTime.Now.ToString(this.bot.Locale);
+                if (this.templateNode.Attributes.Count > 0)
+                {
+                    string format = this.templateNode.Attributes["format"].Value;
+                    if (format.Equals("%H"))
+                    {
+                        return DateTime.Now.ToString("HH");
+                    }
+                }
+                else
+                {
+                    return DateTime.Now.ToString("MMM dd, yyyy");
+                }
             }
             return string.Empty;
         }

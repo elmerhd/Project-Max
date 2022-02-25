@@ -3,7 +3,7 @@
 	<category>
 		<pattern>what is  *</pattern>
 		<template>
-			the answer is <ponder type="math"/>
+			<ponder type="math"/>
 		</template>
 	</category>
 	<category>

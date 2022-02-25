@@ -17,11 +17,20 @@ using System.Diagnostics;
 using SpeedTest;
 using System.Media;
 using NCalc;
+using System.Globalization;
 
 namespace Max
 {
     public class MaxUtils
     {
+        public static DateTime DecodedDateTime { get; set; }
+
+        public static Dictionary<string, string> TimeDictionaryPattern = new Dictionary<string, string> {
+            { "a.m.", "AM" }, {"p.m.", "PM"}, { "in the afternoon", "PM"} , { "in the morning", "AM"}, { "in the evening", "PM"}
+        };
+
+        public static List<string> DayPatternList = new List<string> { "today", "tomorrow"};
+
         private static Dictionary<string, string> MathOperatorsMap = new Dictionary<string, string> { 
             { "x", "*" }, { "X", "*" }, { "times", "*" }, { "multiplied by", "*" }, { "plus", "+" }, { "added by", "+" }, { "minus", "-" }, { "subtracted by", "-" }, { "divided by", "/" },
             { "one", "1" }, { "two", "2" }, { "three", "3" }, { "four", "4" }, { "five", "5" }, { "six", "6" }, { "seven", "7" }, { "eight", "8" }, { "nine", "9" }
@@ -32,10 +41,70 @@ namespace Max
         }
         public static SoundPlayer WaitingSound = new SoundPlayer(@"max.wav");
 
+        public static SoundPlayer DefaultAlarmSound = new SoundPlayer(@"alarm.wav");
+
         public static void SafeRun(Action dAction)
         {
             Thread thr = new Thread(new ThreadStart(dAction));
             thr.Start();
+        }
+
+        public static bool CheckHasTime(string str)
+        {
+            if (str.Contains(":"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static void DecodeTime(string str)
+        {
+            string time = string.Empty;
+            string day = string.Empty;
+            DateTime dateTime = DateTime.Now;
+            string dateFormatted = string.Empty;
+            foreach(string pattern in DayPatternList)
+            {
+                if (str.Contains(pattern))
+                {
+                    day = pattern;
+                }
+            }
+            if (day.Equals("today"))
+            {
+                dateTime = DateTime.Now;
+            } 
+            else if (day.Equals("tomorrow"))
+            {
+                dateTime = DateTime.Now.AddDays(1);
+            }
+            dateFormatted = dateTime.ToString("dd/MM/yyyy");
+
+
+            string timeStarts = str.Substring(str.IndexOfAny("0123456789".ToCharArray()));
+            int hour = Int32.Parse(timeStarts.Split(':')[0]);
+            if (hour < 10)
+            {
+                timeStarts = $"0{timeStarts}";
+            }
+            foreach (KeyValuePair<string, string> entry in TimeDictionaryPattern)
+            {
+                timeStarts = timeStarts.Replace(entry.Key, entry.Value);
+            }
+            
+            DecodedDateTime = DateTime.ParseExact($"{dateFormatted} {timeStarts}", "dd/MM/yyyy hh:mm tt", CultureInfo.InvariantCulture);
+        }
+
+        public static void LoadAlarm()
+        {
+            foreach(MaxAlarmService maxAlarmService in MaxAlarmService.GetAlarms())
+            {
+                new Thread(maxAlarmService.StartService).Start();
+            }
         }
 
         //public static Bitmap GenerateQRCode(int width, int height, string text)
@@ -76,7 +145,6 @@ namespace Max
             var devices = enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active);
             foreach (MMDevice device in devices)
             {
-                Console.WriteLine(device.FriendlyName);
                 if (device.FriendlyName == App.GetEngine().MaxConfig.Speaker)
                 {
                     speaker = device;
@@ -154,17 +222,11 @@ namespace Max
             }
         }
 
-        public static void ListAllAudioAsync()
+        public static string GetDefaultSpeakerDevice()
         {
-            ManagementObjectSearcher objSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_SoundDevice");
-
-            ManagementObjectCollection objCollection = objSearcher.Get();
-            var audioIndex = 0;
-            foreach (ManagementObject audioDevice in objCollection)
-            {
-                Console.WriteLine($"Audo {audioIndex}: {audioDevice["Name"]}");
-                audioIndex++;
-            }
+            var enumerator = new MMDeviceEnumerator();
+            var device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
+            return device.FriendlyName;
         }
 
         //public static SerialPort GetSerialPort()
@@ -179,6 +241,7 @@ namespace Max
         //        return null;
         //    }
         //}
+
         public static void PlayWaitingSound()
         {
             new Thread(WaitingSound.Play).Start();
@@ -189,24 +252,14 @@ namespace Max
             new Thread(WaitingSound.Stop).Start();
         }
 
-
-        public static void CheckInternetSpeed()
+        public static void PlayAlarmSound()
         {
-            PlayWaitingSound();
-            ISpeedTestClient _speedTestClientClient = new SpeedTestClient();
-            var settings = _speedTestClientClient.GetSettings();
-            var latency = _speedTestClientClient.TestServerLatency(settings.Servers.First());
-            var downloadSpeed = _speedTestClientClient.TestDownloadSpeed(settings.Servers.First(), settings.Download.ThreadsPerUrl);
-            var uploadSpeed = _speedTestClientClient.TestUploadSpeed(settings.Servers.First(), settings.Upload.ThreadsPerUrl);
+            new Thread(DefaultAlarmSound.Play).Start();
+        }
 
-            string delay = (latency > 100) ? "high" : "low";
-
-            string data = $"{{!salutation}}, your network delay is {delay}, it is equivalent to {latency} milliseconds and your download speed is {downloadSpeed.ToString("#")} Megabits per seconds.";
-            App.GetEngine().BrainEngine.Log($"latency : {latency}");
-            App.GetEngine().BrainEngine.Log($"downloadSpeed : {downloadSpeed}");
-            App.GetEngine().BrainEngine.Log($"uploadSpeed : {uploadSpeed}");
-            WaitingSound.Stop();
-            App.GetEngine().VoiceOutputEngine.Speak(data);
+        public static void StopAlarmSound()
+        {
+            new Thread(DefaultAlarmSound.Stop).Start();
         }
 
         public static void Shutdown()
@@ -232,7 +285,7 @@ namespace Max
             if (query != null)
             {
                 App.GetEngine().BrainEngine.Log($"ResolveQuery :  {query}");
-                foreach (string word in query.Split(" "))
+                foreach (string word in query.Split(' '))
                 {
                     App.GetEngine().BrainEngine.Log($"ResolveQuery :  {word}");
                     if (MathOperatorsMap.ContainsKey(word))
@@ -344,6 +397,66 @@ namespace Max
             }
 
             return result + currentResult * lastModifier;
+        }
+
+        public static string CheckAvailableStreamingServices(double dlSpeed)
+        {
+            string data = string.Empty;
+            if(dlSpeed > 1000 && dlSpeed < 5000)
+            {
+                data = "you can watch Standard Definition videos on youtube, netflix and twitch.";
+            } 
+            else if (dlSpeed > 5000 && dlSpeed < 10000)
+            {
+                data = "you can watch High Definition videos on youtube, netflix and twitch.";
+            }
+            else if (dlSpeed > 10000 && dlSpeed < 100000)
+            {
+                data = "you can watch Ultra High Definition videos on youtube, netflix and twitch.";
+            }
+
+            return data;
+        }
+
+        public static void UnlockWin(MaxEngine maxEngine)
+        {
+            try
+            {
+                
+            } catch (Exception ex)
+            {
+                maxEngine.BrainEngine.Log($"error : {ex.Message}");
+            }
+            
+        }
+
+        public static string GetTimesOfTheDay()
+        {
+            if (DateTime.Now.Hour <= 11)
+            {
+                return "morning";
+            } 
+            else if (DateTime.Now.Hour == 12)
+            {
+                return "lunch time";
+            }
+            else if (DateTime.Now.Hour <= 16)
+            {
+                return "afternoon";
+            }
+            else if (DateTime.Now.Hour <= 20)
+            {
+                return "evening";
+            } 
+            else if (DateTime.Now.Hour < 24)
+            {
+                return "night time";
+            }
+            else if (DateTime.Now.Hour == 24)
+            {
+                return "mid night";
+            }
+            return String.Empty;
         }
     }
     

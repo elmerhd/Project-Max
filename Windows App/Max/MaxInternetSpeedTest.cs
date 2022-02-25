@@ -11,7 +11,8 @@ namespace Max
     public class MaxInternetSpeedTest : MaxService
     {
         public ISpeedTestClient SpeedTestClientClient = new SpeedTestClient();
-        public MaxInternetSpeedTest()
+
+        public MaxInternetSpeedTest(MaxEngine maxEngine, MaxUI maxUI) : base(maxEngine, maxUI)
         {
             this.OnStart();
             SpeedTestClientClient = new SpeedTestClient();
@@ -19,49 +20,70 @@ namespace Max
 
         public void GetInternetSpeedTest()
         {
+            string data = string.Empty;
+            Server server = null;
             try
             {
-                App.GetEngine().BrainEngine.Log($"Testing Internet Speed ...");
+                this.Log($"Testing Internet Speed ...");
                 var settings = SpeedTestClientClient.GetSettings();
-                App.GetEngine().BrainEngine.Log($"Initializing Settings ...");
-                App.GetEngine().BrainEngine.Log($"Looking for Nearest Matching Server ...");
-
-                foreach (Server s in settings.Servers)
+                this.Log($"Initializing Settings ...");
+                this.Log($"Looking for Nearest Matching Server ...");
+                foreach (Server foundServer in settings.Servers)
                 {
-                    App.GetEngine().BrainEngine.Log($"Found Server : Name:{s.Name} Host:{s.Host} Country:{s.Country} Distance:{s.Distance} Sponsor:{s.Sponsor}");
+                    this.Log($"Found Server : Name:{foundServer.Name} Host:{foundServer.Host} Country:{foundServer.Country} Distance:{foundServer.Distance} Sponsor:{foundServer.Sponsor}");
+                    if ((foundServer.Sponsor.Contains("PLDT") || foundServer.Sponsor.Contains("Smart")))
+                    {
+                        server = foundServer;
+                        break;
+                    }
                 }
-                var server = settings.Servers.Where(s1 => s1.Sponsor.Contains("PLDT")).First();
                 if (server != null)
                 {
-                    App.GetEngine().BrainEngine.Log($"Selecting : Name:{server.Name} Host:{server.Host} Country:{server.Country} Distance:{server.Distance} Sponsor:{server.Sponsor}");
+                    this.Log($"Selecting : Name:{server.Name} Host:{server.Host} Country:{server.Country} Distance:{server.Distance} Sponsor:{server.Sponsor}");
                 }
                 else
                 {
-                    App.GetEngine().BrainEngine.Log($"No Matching Server from your provider. Selecting Nearest Server...");
+                    this.Log($"No Matching Server from your provider. Selecting Nearest Server...");
                     server = settings.Servers.First();
-                    App.GetEngine().BrainEngine.Log($"Selecting : Name:{server.Name} Host:{server.Host} Country:{server.Country} Distance:{server.Distance} Sponsor:{server.Sponsor}");
+                    this.Log($"Selecting : Name:{server.Name} Host:{server.Host} Country:{server.Country} Distance:{server.Distance} Sponsor:{server.Sponsor}");
                 }
-                App.GetEngine().BrainEngine.Log($"Testing Latency ...");
+                this.Log($"Testing Latency ...");
                 var latency = SpeedTestClientClient.TestServerLatency(server);
-                App.GetEngine().BrainEngine.Log($"Latency : {latency}");
-                App.GetEngine().BrainEngine.Log($"Testing Download Speed ...");
+                this.Log($"Latency : {latency}");
+                this.Log($"Testing Download Speed ...");
                 var downloadSpeed = SpeedTestClientClient.TestDownloadSpeed(server, settings.Download.ThreadsPerUrl);
-                App.GetEngine().BrainEngine.Log($"Download Speed : {downloadSpeed}");
-                App.GetEngine().BrainEngine.Log($"Testing Upload Speed ...");
+                this.Log($"Download Speed : {downloadSpeed}");
+                this.Log($"Testing Upload Speed ...");
                 var uploadSpeed = SpeedTestClientClient.TestUploadSpeed(server, settings.Upload.ThreadsPerUrl);
-                App.GetEngine().BrainEngine.Log($"Upload Speed : {uploadSpeed}");
+                this.Log($"Upload Speed : {uploadSpeed}");
 
                 string delay = (latency > 100) ? "high" : "low";
+                if (latency < 50 && latency > 1)
+                {
+                    delay = "very low";
+                }
+                else if (latency < 100 && latency > 50)
+                {
+                    delay = "low";
+                }
+                else if (latency < 150 && latency > 100)
+                {
+                    delay = "high";
+                } else if (latency < 200 && latency > 150)
+                {
+                    delay = "very high";
+                }
 
-                string data = $"{{!salutation}}, your network delay is {delay}, it is equivalent to {latency} milliseconds and your download speed is {downloadSpeed.ToString("#")} Megabits per seconds.";
-                OnFinished();
-                App.GetEngine().VoiceOutputEngine.Speak(data);
+                data = $"{{!salutation}}, your network delay is {delay}, it is equivalent to {latency} milliseconds, your download speed is {downloadSpeed.ToString("N0")} Megabits per second and your upload speed is {uploadSpeed.ToString("N0")} Megabits per second.";
+                
             } 
             catch (Exception e)
             {
-                OnFinished();
-                string data = $"{{!salutation}}, I encountered an error while testing. It say's {e.Message}";
-                App.GetEngine().VoiceOutputEngine.Speak(data);
+                data = $"{{!salutation}}, I encountered an error while testing the internet speed. It say's {e.Message}";
+            }
+            finally
+            {
+                this.OnFinished(data);
             }
         }
 

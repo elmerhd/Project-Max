@@ -14,30 +14,27 @@ namespace Max
         {
             this.MaxEngine = maxEngine;
             SpeechSynthesizer = new SpeechSynthesizer();
-            SpeechSynthesizer.SelectVoice("IVONA 2 Kimberly");
+            SpeechSynthesizer.SelectVoice(MaxEngine.MaxConfig.Voice);
             SpeechSynthesizer.Volume = 100;
-
-            
             maxEngine.BrainEngine.Log($"Loading {nameof(VoiceEngine)}");
         }
 
         public void Speak(string text)
         {
-            string textString;
+            if (text.Contains("{!alarm_time}"))
+            {
+                text = text.Replace("{!alarm_time}", MaxUtils.DecodedDateTime.ToString("hh:mm"));
+            }
             if(text.Contains("{!salutation}"))
             {
-                textString = text.Replace("{!salutation}", this.MaxEngine.MaxConfig.DefaultSalutation);
-            }
-            else
-            {
-                textString = text;
+                text = text.Replace("{!salutation}", this.MaxEngine.MaxConfig.DefaultSalutation);
             }
 
             if (App.GetUI() != null)
             {
-                App.GetUI().UpdateResponseText(textString);
+                App.GetUI().UpdateResponseText(text);
             }
-            SpeechSynthesizer.Speak(textString);
+            SpeechSynthesizer.Speak(text);
         }
     }
 }

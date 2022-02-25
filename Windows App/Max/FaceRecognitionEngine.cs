@@ -111,7 +111,7 @@ namespace Max
                 //Eigen Face Algorithm
                 FaceRecognizer.PredictionResult result = recognizer.Predict(detectedFace.Resize(100, 100, Inter.Cubic));
                 FaceName = nameList[result.Label];
-                App.GetEngine().VoiceOutputEngine.Speak("Hello "+FaceName);
+                App.GetEngine().VoiceEngine.Speak("Hello "+FaceName);
 
             }
             else

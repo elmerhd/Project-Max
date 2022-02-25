@@ -13,6 +13,7 @@ namespace AIMLBot.AIMLTagHandlers
     public class system : AIMLBot.Utils.AIMLTagHandler
     {
         public MaxEngine MaxEngine;
+        public MaxUI MaxUI;
         /// <summary>
         /// Ctor
         /// </summary>
@@ -31,6 +32,7 @@ namespace AIMLBot.AIMLTagHandlers
             : base(bot, user, query, request, result, templateNode)
         {
             MaxEngine = App.GetEngine();
+            MaxUI = App.GetUI();
         }
 
         protected override string ProcessChange()
@@ -40,12 +42,14 @@ namespace AIMLBot.AIMLTagHandlers
                 string uri = this.templateNode.Attributes["action"].Value;
                 if (uri.Equals("checkInternet"))
                 {
-                    new Thread(new MaxInternetSpeedTest().StartService).Start();
+                    new Thread(new MaxInternetSpeedTest(MaxEngine, MaxUI).StartService).Start();
+                    return MaxEngine.MaxConfig.DefaultWaitingMessages[new Random().Next(MaxEngine.MaxConfig.DefaultWaitingMessages.Count)];
                 }
                 else if (uri.Equals("checkWeather"))
                 {
                     string location = this.query.InputStar[0];
-                    new Thread(new MaxWeather(location).StartService).Start();
+                    new Thread(new MaxWeather(MaxEngine, MaxUI, location).StartService).Start();
+                    return MaxEngine.MaxConfig.DefaultWaitingMessages[new Random().Next(MaxEngine.MaxConfig.DefaultWaitingMessages.Count)];
                 }
                 else if (uri.Equals("shutdown"))
                 {
@@ -62,6 +66,20 @@ namespace AIMLBot.AIMLTagHandlers
                 else if (uri.Equals("hideUI"))
                 {
                     App.GetUI().HideUI();
+                }
+                else if (uri.Equals("unlockWindows"))
+                {
+                    MaxUtils.UnlockWin(MaxEngine);
+                } 
+                else if (uri.Equals("setAlarm"))
+                {
+                    new Thread(new MaxAlarmService(MaxEngine, MaxUI, MaxUtils.DecodedDateTime, true).StartService).Start();
+                    return MaxEngine.MaxConfig.DefaultAlarmMessages[new Random().Next(MaxEngine.MaxConfig.DefaultAlarmMessages.Count)];
+                }
+                else if (uri.Equals("checkCalendar"))
+                {
+                    new Thread(new MaxCalendarService(MaxEngine, MaxUI, DateTime.Now).StartService).Start();
+                    return MaxEngine.MaxConfig.DefaultWaitingMessages[new Random().Next(MaxEngine.MaxConfig.DefaultWaitingMessages.Count)];
                 }
                 return MaxEngine.MaxConfig.DefaultCommandMessages[new Random().Next(MaxEngine.MaxConfig.DefaultCommandMessages.Count)];
             }

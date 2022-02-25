@@ -32,22 +32,35 @@ namespace Max
             Log($"Loading {nameof(BrainEngine)}");
         }
 
-        public string getResponse(string text)
+        public string GetResponse(string text)
         {
             Request request = new Request(text, User, Bot);
             AIMLBot.Result result = Bot.Chat(request);
             return result.Output;
         }
 
-        public void analyze(ServerResponse serverResponse)
+        public void Analyze(ServerResponse serverResponse)
         {
             Log($"Analyzing = {serverResponse.Message}");
             if (App.GetUI() != null)
             {
                 App.GetUI().UpdateRecognizedText(serverResponse.Message);
             }
-            string response = getResponse(serverResponse.Message);
-            MaxEngine.VoiceOutputEngine.Speak(response);
+            string response = GetResponse(serverResponse.Message);
+            MaxEngine.VoiceEngine.Speak(response);
+        }
+
+        public void Analyze(ServerResponse serverResponse, bool hasTime)
+        {
+            Log($"Analyzing = {serverResponse.Message} hasTime:true");
+
+            if (App.GetUI() != null)
+            {
+                App.GetUI().UpdateRecognizedText(serverResponse.Message);
+            }
+            MaxUtils.DecodeTime(serverResponse.Message);
+            string response = GetResponse(serverResponse.Message);
+            MaxEngine.VoiceEngine.Speak(response);
         }
 
         public void Log(string message)

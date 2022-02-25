@@ -30,7 +30,6 @@ namespace Max
 		private static readonly string CHANNEL_ID = "maxai_notification";
 		private static readonly int NOTIFICATION_ID = 1000;
 
-		private MediaButtonBroadcastReceiver MediaButtonBroadcastReceiver;
 		private ImageButton BtnMic;
 		public static SpeechRecognizer Recognizer { get; set; }
 		public static Intent SpeechIntent { get; set; }
@@ -52,10 +51,8 @@ namespace Max
 		public void InitComponents()
 		{
 			CreateNotificationChannel();
-			CreateBroadcastChannel();
 			BtnMic = FindViewById<ImageButton>(id: Resource.Id.imageButtonMic);
 			BtnMic.Click += BtnMic_Click;
-
 		}
 
 		public void RequestApplicationPermissions()
@@ -74,25 +71,13 @@ namespace Max
         protected override void OnResume()
         {
             base.OnResume();
-			//RegisterReceiver(MediaButtonBroadcastReceiver, new IntentFilter("com.junk.application.max"));
 		}
 
         protected override void OnPause()
         {
-			//UnregisterReceiver(MediaButtonBroadcastReceiver);
 			base.OnPause();
         }
 
-        private void CreateBroadcastChannel()
-		{
-			//MediaButtonBroadcastReceiver = new MediaButtonBroadcastReceiver();
-			//RegisterReceiver(MediaButtonBroadcastReceiver, new IntentFilter("com.junk.application.max"));
-			MediaSession ms = new MediaSession(ApplicationContext, PackageName);
-			ms.Active = true;
-			ms.SetCallback(new myMediaSession());
-			ms.SetFlags(MediaSessionFlags.HandlesMediaButtons | MediaSessionFlags.HandlesTransportControls);
-			ms.Active = true;
-		}
 
 
 		private void CreateNotificationChannel()
@@ -130,6 +115,14 @@ namespace Max
 			SpeechIntent.PutExtra(RecognizerIntent.ExtraLanguageModel, RecognizerIntent.LanguageModelFreeForm);
 			SpeechIntent.PutExtra(RecognizerIntent.ExtraCallingPackage, PackageName);
 			SpeechIntent.PutExtra(RecognizerIntent.ExtraLanguage, Locale.Default);
+			SpeechIntent.PutExtra(RecognizerIntent.ExtraLanguagePreference, Java.Util.Locale.Default);
+			SpeechIntent.PutExtra(RecognizerIntent.ExtraMaxResults, 1);
+			SpeechIntent.PutExtra("android.speech.extra.DICTATION_MODE", true);
+			SpeechIntent.PutExtra(RecognizerIntent.ExtraPartialResults, false);
+			SpeechIntent.PutExtra(RecognizerIntent.ExtraSpeechInputCompleteSilenceLengthMillis, 1500);
+			SpeechIntent.PutExtra(RecognizerIntent.ExtraSpeechInputPossiblyCompleteSilenceLengthMillis, 1500);
+			SpeechIntent.PutExtra(RecognizerIntent.ExtraSpeechInputMinimumLengthMillis, 15000);
+			SpeechIntent.PutExtra(RecognizerIntent.ExtraPartialResults, true);
 		}
 
 		public bool AudioPermissionGranted()
@@ -164,26 +157,27 @@ namespace Max
 						ServerRequest serverRequest = new ServerRequest();
 						serverRequest.UUIDv4 = Guid.NewGuid().ToString();
 						serverRequest.Message = message;
+						notify(serverRequest);
 						API.sendRequest(serverRequest);
 						break;
 				}
 			}
 		}
 
-		//public void notify(ServerRequest serverRequest)
-		//{
-		//          var builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-		//                        .SetAutoCancel(true) // Dismiss the notification from the notification area when the user clicks on it
-		//                        .SetContentTitle("API Request Success") // Set the title
-		//                        .SetSmallIcon(Resource.Drawable.abc_ic_star_black_48dp) // This is the icon to display
-		//                        .SetContentText($"{serverRequest.Message}"); // the message to display.
+        public void notify(ServerRequest serverRequest)
+        {
+            var builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                          .SetAutoCancel(true) // Dismiss the notification from the notification area when the user clicks on it
+                          .SetContentTitle("API Request Success") // Set the title
+                          .SetSmallIcon(Resource.Drawable.abc_ic_star_black_48dp) // This is the icon to display
+                          .SetContentText($"{serverRequest.Message}"); // the message to display.
 
-		//          // Finally, publish the notification:
-		//          NotificationManagerCompat notificationManager = NotificationManagerCompat.From(this);
-		//          notificationManager.Notify(NOTIFICATION_ID, builder.Build());
-		//      }
+            // Finally, publish the notification:
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.From(this);
+            notificationManager.Notify(NOTIFICATION_ID, builder.Build());
+        }
 
-		public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
 		{
 			if (requestCode == REQUEST_AUDIO)
 			{
@@ -221,6 +215,7 @@ namespace Max
 			ServerRequest serverRequest = new ServerRequest();
 			serverRequest.UUIDv4 = Guid.NewGuid().ToString();
 			serverRequest.Message = recognized;
+			notify(serverRequest);
 			API.sendRequest(serverRequest);
 		}
 

@@ -9,12 +9,11 @@
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         Title="Max" 
-        Height="450" 
-        Width="800" 
+        Height="650" 
+        Width="1000" 
         ResizeMode="NoResize" 
         ContentRendered="OnContentRendered"
         WindowState="Maximized"
-        Topmost="True"
         >
 
     <Window.Background>
@@ -75,85 +74,138 @@
             </BeginStoryboard>
         </EventTrigger>
     </Window.Triggers>
-    <Grid Background="black" x:Name="MaxWidgetContainer">
-        <Grid x:Name="MaxUIWidget" Width="{Binding SpeakerMasterPeakValue, FallbackValue=400}" Height="{Binding SpeakerMasterPeakValue, FallbackValue=400}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="1" MinHeight="100">
-                <Border Grid.ColumnSpan="2" CornerRadius="125,125,125,125" Background="{StaticResource Border2BackgroundBrush}" OpacityMask="{StaticResource Border2BackgroundOpacityMask}" Opacity="0.4">
-                    <Border.RenderTransform>
-                        <RotateTransform Angle="0" CenterX="{Binding CenterXY,FallbackValue=200}" CenterY="{Binding CenterXY, FallbackValue=200}"/>
-                    </Border.RenderTransform>
-                    <Border.Triggers>
-                        <EventTrigger RoutedEvent="Loaded">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation
-                                    Storyboard.TargetProperty="(Border.RenderTransform).(RotateTransform.Angle)"
-                                    To="-360" Duration="0:0:10" RepeatBehavior="Forever" AutoReverse="True"/>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                    </Border.Triggers>
-                </Border>
-                <Border Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="125,125,125,125" Background="{StaticResource Border1BackgroundBrush}" Opacity="0.4" OpacityMask="{StaticResource Border1BackgroundOpacityMask}">
-                    <Border.RenderTransform>
-                        <RotateTransform Angle="45" CenterX="{Binding CenterXY, FallbackValue=200}" CenterY="{Binding CenterXY,FallbackValue=200}"/>
-                    </Border.RenderTransform>
-                    <Border.Triggers>
-                        <EventTrigger RoutedEvent="Loaded">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation
-                                    Storyboard.TargetProperty="(Border.RenderTransform).(RotateTransform.Angle)"
-                                    To="360" Duration="0:0:10" RepeatBehavior="Forever" AutoReverse="True"/>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                    </Border.Triggers>
-                </Border>
-                <Ellipse  x:Name="MaxCircle" Width="{Binding ActualWidth}" Height="{Binding ActualHeight}" Margin="10,10,10,10" StrokeThickness="10">
-                    <Ellipse.Fill>
-                        <SolidColorBrush Color="Black" Opacity="1"/>
-                    </Ellipse.Fill>
-                    <Ellipse.Stroke>
-                        <SolidColorBrush Color="#00FF33"/>
-                    </Ellipse.Stroke>
-                </Ellipse>
+    <Border BorderThickness="5">
+        <Border.BorderBrush>
+            <LinearGradientBrush>
+                <GradientStop x:Name="GradientStop1" Color="Blue" Offset="0.0" />
+                <GradientStop x:Name="GradientStop2" Color="Purple" Offset="0.5" />
+                <GradientStop x:Name="GradientStop3" Color="Green" Offset="1.0" />
+            </LinearGradientBrush>
+        </Border.BorderBrush>
+        <Border.Triggers>
+            <EventTrigger RoutedEvent="Loaded">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation 
+                            Storyboard.TargetName="GradientStop1"
+                            Storyboard.TargetProperty="Offset"
+                            From="0.0" To="1.0" Duration="0:0:1.5"
+                            RepeatBehavior="Forever"
+                            AutoReverse="True" />
+                        <ColorAnimation 
+                            Storyboard.TargetName="GradientStop2"
+                            Storyboard.TargetProperty="Color"
+                            From="Purple" To="Yellow" 
+                            Duration="0:0:1.5"
+                            AutoReverse="True"
+                            RepeatBehavior="Forever"
+                            BeginTime="0:0:3" />
+                        <ColorAnimation 
+                            Storyboard.TargetName="GradientStop3"
+                            Storyboard.TargetProperty="Color" 
+                            Duration="0:0:1.5" 
+                            RepeatBehavior="Forever"
+                            AutoReverse="True"
+                            BeginTime="0:0:6">
+                            <ColorAnimation.By>
+                                <Color ScA="-1" ScR="0" ScB="0" ScG="0" />
+                            </ColorAnimation.By>
+                        </ColorAnimation>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Border.Triggers>
+        <Grid Background="black" x:Name="MaxWidgetContainer" >
+            <Grid x:Name="MaxUIWidget" Width="{Binding SpeakerMasterPeakValue, FallbackValue=400}" Height="{Binding SpeakerMasterPeakValue, FallbackValue=400}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="1" MinHeight="100">
+                    <Border Grid.ColumnSpan="2" CornerRadius="125,125,125,125" Background="{StaticResource Border2BackgroundBrush}" OpacityMask="{StaticResource Border2BackgroundOpacityMask}" Opacity="0.4">
+                        <Border.RenderTransform>
+                            <RotateTransform Angle="0" CenterX="{Binding CenterXY,FallbackValue=200}" CenterY="{Binding CenterXY, FallbackValue=200}"/>
+                        </Border.RenderTransform>
+                        <Border.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                        Storyboard.TargetProperty="(Border.RenderTransform).(RotateTransform.Angle)"
+                                        To="-360" Duration="0:0:10" RepeatBehavior="Forever" AutoReverse="True"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Border.Triggers>
+                    </Border>
+                    <Border Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="125,125,125,125" Background="{StaticResource Border1BackgroundBrush}" Opacity="0.4" OpacityMask="{StaticResource Border1BackgroundOpacityMask}">
+                        <Border.RenderTransform>
+                            <RotateTransform Angle="45" CenterX="{Binding CenterXY, FallbackValue=200}" CenterY="{Binding CenterXY,FallbackValue=200}"/>
+                        </Border.RenderTransform>
+                        <Border.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                        Storyboard.TargetProperty="(Border.RenderTransform).(RotateTransform.Angle)"
+                                        To="360" Duration="0:0:10" RepeatBehavior="Forever" AutoReverse="True"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Border.Triggers>
+                    </Border>
 
-                <TextBlock 
-                x:Name="MaxText"
-                Text="max" 
-                Foreground="#00FF33"
-                VerticalAlignment="Center" 
-                HorizontalAlignment="Center" 
-                FontFamily="Azonix"
-                FontWeight="Bold"
-                Opacity="0.1"
-                FontSize="86"/>
+                    <Ellipse  x:Name="MaxCircle" Width="{Binding ActualWidth}" Height="{Binding ActualHeight}" Margin="10,10,10,10" StrokeThickness="10">
+                        <Ellipse.Fill>
+                            <SolidColorBrush Color="Black" Opacity="1"/>
+                        </Ellipse.Fill>
+                        <Ellipse.Stroke>
+                            <SolidColorBrush Color="#00FF33"/>
+                        </Ellipse.Stroke>
+                    </Ellipse>
+
+                    <Image Name="IllustrationImage"
+                        Opacity="0"
+                        Source="https://openweathermap.org/img/wn/10d@4x.png"
+                        Width="250"
+                        Height="250"
+                        Stretch="Fill" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center" />
+
+                    <TextBlock 
+                        x:Name="MaxText"
+                        Text="max"
+                        Visibility="Visible"
+                        Foreground="#00FF33"
+                        VerticalAlignment="Center" 
+                        HorizontalAlignment="Center" 
+                        FontFamily="Azonix"
+                        FontWeight="Bold"
+                        Opacity="0.1"
+                        FontSize="86"/>
+                </Grid>
+
             </Grid>
-
+            <TextBlock 
+                x:Name="ResponseText" 
+                Margin="10,0,10,10" 
+                Text="" 
+                TextWrapping="Wrap" 
+                Height="92"
+                FontFamily="Azonix"
+                Foreground="#00FF33"
+                VerticalAlignment="Bottom"
+                FontSize="25"
+                TextAlignment="Center"/>
+            <TextBlock 
+                x:Name="RecognizedText"
+                Margin="10,0,10,107" 
+                Text="" 
+                TextWrapping="Wrap"
+                FontFamily="Azonix"
+                Foreground="#1885b9"
+                FontSize="25"
+                TextAlignment="Center" Height="88" VerticalAlignment="Bottom"/>
         </Grid>
-        <TextBlock 
-            x:Name="ResponseText" 
-            Margin="10,0,10,10" 
-            Text="" 
-            TextWrapping="Wrap" 
-            Height="92"
-            FontFamily="Azonix"
-            Foreground="#00FF33"
-            VerticalAlignment="Bottom"
-            FontSize="35"
-            TextAlignment="Center"/>
-        <TextBlock 
-            x:Name="RecognizedText"
-            Margin="10,0,10,107" 
-            Text="" 
-            TextWrapping="Wrap"
-            FontFamily="Azonix"
-            Foreground="#1885b9"
-            FontSize="35"
-            TextAlignment="Center" Height="88" VerticalAlignment="Bottom"/>
-    </Grid>
+    </Border>
 </Window>

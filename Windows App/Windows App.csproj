@@ -7,10 +7,16 @@
     <RootNamespace>Max</RootNamespace>
     <AssemblyName>Max</AssemblyName>
     <StartupObject>Max.App</StartupObject>
-    <ApplicationIcon>Max.ico</ApplicationIcon>
+    <ApplicationIcon>max-logo.ico</ApplicationIcon>
     <AssemblyVersion>1.2.0.0</AssemblyVersion>
     <FileVersion>1.2.0.0</FileVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="max-logo.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CoreCLR-NCalc" Version="2.2.92" />
@@ -22,6 +28,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.56.0.2590" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.24" />
     <PackageReference Include="HtmlAgilityPack.CssSelectors" Version="1.0.2" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
@@ -92,7 +99,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="brain\connectivity.aiml">
+    <None Update="alarm.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="brain\greetings.aiml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="brain\math.aiml">
@@ -101,19 +111,16 @@
     <None Update="brain\max-system.aiml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="brain\max-profile.aiml">
+    <None Update="brain\copyme.aiml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="brain\max.aiml">
+    <None Update="brain\shutup.aiml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="brain\netflix-default.aiml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="brain\spotify-actions.aiml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="brain\user.aiml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="config\DefaultPredicates.xml">
@@ -138,6 +145,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="config\Substitutions.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="google-calendar-credentials.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="max.wav">

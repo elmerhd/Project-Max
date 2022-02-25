@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<aiml>
+	<category>
+		<pattern>shut up</pattern>
+		<template>
+			<think>
+				<set name="topic">shutup</set>
+			</think>
+			<random>
+				<li>fine! be like that then.</li>
+				<li>ok, i'll stop talking now.</li>
+				<li>i won't talk to you then if that's what you want.</li>
+				<li>your wish is my command.</li>
+				<li>i have the right to remain silent but not the ability.</li>
+			</random>
+		</template>
+	</category>
+	<topic name="shutup">
+		<category>
+			<pattern>_</pattern>
+			<template>
+				<think>
+					<set name="inp">
+						<star/>
+					</set>
+				</think>
+				<condition name="inp">
+					<li value="i am sorry">
+						ok, i'll start talking again.<set name="topic"></set>
+					</li>
+					<li value="sorry">
+						ok, i'll start talking again.<set name="topic"></set>
+					</li>
+					<li value="im sorry">
+						ok, i'll start talking again.<set name="topic"></set>
+					</li>
+					<li value="im sorry max">
+						apology accepted.<set name="topic"></set>
+					</li>
+					<li>
+						<random>
+							<li>you told me to shut up remember?</li>
+						</random>
+					</li>
+				</condition>
+			</template>
+		</category>
+	</topic>
+</aiml>

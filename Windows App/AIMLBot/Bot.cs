@@ -868,6 +868,9 @@ namespace AIMLBot
 						case "app":
 							tagHandler = new AIMLTagHandlers.app(this, user, query, request, result, node);
 							break;
+						case "greetings":
+							tagHandler = new AIMLTagHandlers.greetings(this, user, query, request, result, node);
+							break;
 						default:
 							tagHandler = null;
 							break;

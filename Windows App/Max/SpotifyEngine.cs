@@ -85,30 +85,6 @@ namespace Max
             };
             BrowserUtil.Open(loginRequest.ToUri());
 
-            Process[] procsEdge = Process.GetProcessesByName("msedge");
-            foreach (Process Edge in procsEdge)
-            {
-                if (Edge.MainWindowHandle != IntPtr.Zero)
-                {
-                    AutomationElement root = AutomationElement.FromHandle(Edge.MainWindowHandle);
-                    var tabs = root.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.TabItem));
-                    var elmUrl = root.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.NameProperty, "Address and search bar"));
-                    foreach (AutomationElement tabitem in tabs)
-                    {
-                        if (elmUrl != null)
-                        {
-                            AutomationPattern[] patterns = elmUrl.GetSupportedPatterns();
-                            if (patterns.Length > 0)
-                            {
-                                ValuePattern val = (ValuePattern)elmUrl.GetCurrentPattern(patterns[0]);
-                                string url = val.Current.Value;
-                                App.GetEngine().BrainEngine.Log($"Found {url} : {url.Contains("localhost:5000/callback?code")}");
-                            }
-                        }
-                        tabitem.SetFocus();
-                    }
-                }
-            }
         }
 
         public async void GetAvailableDeviceID()

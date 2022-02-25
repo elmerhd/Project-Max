@@ -14,6 +14,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace Max
 {
@@ -76,6 +77,35 @@ namespace Max
             });
         }
 
+        public void ShowIllustration(string imageURL)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                BitmapImage bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.UriSource = new Uri(imageURL, UriKind.Absolute);
+                bitmap.EndInit();
+
+                IllustrationImage.Source = bitmap;
+                HideElement(MaxText);
+                ShowElement(IllustrationImage);
+                RemoveIllustrations();
+            });
+        }
+
+        public void RemoveIllustrations()
+        {
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(10) };
+            timer.Tick += (sender, args) =>
+            {
+                HideElement(IllustrationImage);
+                ShowElement(MaxText);
+                timer.Stop();
+            };
+
+            timer.Start();
+        }
+
         private void OnContentRendered(object sender, EventArgs e)
         {
             SpeakerDevice = MaxUtils.GetSpeakerDevice();
@@ -83,7 +113,7 @@ namespace Max
             masterPeakVolumeTimer.Interval = TimeSpan.FromMilliseconds(1);
             masterPeakVolumeTimer.Tick += MasterPeakVolumeTimer_Tick;
             masterPeakVolumeTimer.Start();
-            ShowName();
+            ShowElement(MaxText);
         }
         private void MasterPeakVolumeTimer_Tick(object sender, EventArgs e)
         {
@@ -104,10 +134,18 @@ namespace Max
 
        
 
-        public void ShowName()
+        public void ShowElement(UIElement element)
         {
+            element.Opacity = 0;
             DoubleAnimation animation = new DoubleAnimation(1, TimeSpan.FromSeconds(4));
-            MaxText.BeginAnimation(UIElement.OpacityProperty, animation);
+            element.BeginAnimation(UIElement.OpacityProperty, animation);
+        }
+
+        public void HideElement(UIElement element)
+        {
+            element.Opacity = 1;
+            DoubleAnimation animation = new DoubleAnimation(0, TimeSpan.FromSeconds(4));
+            element.BeginAnimation(UIElement.OpacityProperty, animation);
         }
 
     }

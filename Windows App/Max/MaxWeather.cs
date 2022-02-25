@@ -1,6 +1,9 @@
-﻿using System;
+﻿using OpenWeatherAPI;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,35 +11,94 @@ namespace Max
 {
     public class MaxWeather : MaxService
     {
-        private OpenWeatherAPI.OpenWeatherApiClient OpenWeatherApiClient;
+        private OpenWeatherApiClient OpenWeatherApiClient;
         private string Location;
+        private string WeatherIconFolder = "weather-icons";
         private const string apiKey = "d02f9f216395b2b8d82b34dd367f5a62";
-        public MaxWeather(string location)
+        public MaxWeather(MaxEngine maxEngine, MaxUI maxUI, string location) : base(maxEngine, maxUI)
         {
             this.OnStart();
-            OpenWeatherApiClient = new OpenWeatherAPI.OpenWeatherApiClient(apiKey);
-            Location = location;
+            this.OpenWeatherApiClient = new OpenWeatherApiClient(apiKey);
+            this.Location = location;
+        }
+
+        public void DownloadIcon(string url)
+        {
+            this.Log("Downloading Icons . . .");
+            using (WebClient client = new WebClient())
+            {
+                Uri uri = new Uri(url);
+                string filename = System.IO.Path.GetFileName(uri.LocalPath);
+                string path = Path.Combine(Environment.CurrentDirectory, $"{MaxEngine.ImagesFolder}\\{WeatherIconFolder}\\", filename);
+                client.DownloadFileAsync(new Uri(url), path);
+                this.Log($"Icon Saved : {path}");
+            }
+        }
+
+        public string CheckIcon(string url)
+        {
+            Uri uri = new Uri(url);
+            string filename = System.IO.Path.GetFileName(uri.LocalPath);
+            string path = Path.Combine(Environment.CurrentDirectory, $"{MaxEngine.ImagesFolder}\\{WeatherIconFolder}\\", filename);
+            FileInfo fileInfo = new FileInfo(path);
+            if (fileInfo.Exists)
+            {
+                return fileInfo.FullName;
+            } 
+            else
+            {
+                return string.Empty;
+            }
         }
 
         public async void GetWeather()
         {
+            string data = string.Empty;
             try
             {
-                App.GetEngine().BrainEngine.Log($"Getting Weather ...");
-                App.GetEngine().BrainEngine.Log($"Getting Weather in {Location}...");
+                this.Log($"Getting Weather ...");
+                this.Log($"Getting Weather in {Location}...");
                 var query = await OpenWeatherApiClient.QueryAsync(Location);
-                App.GetEngine().BrainEngine.Log($"Results : Location:{query.Name} | Temperature_Celcius:{query.Main.Temperature.CelsiusCurrent} | Temperature_Fahrenheit:{query.Main.Temperature.FahrenheitCurrent} |  Humidity:{query.Main.Humidity} | Wind:{query.Wind.SpeedMetersPerSecond}");
-                string data = $"{{!salutation}}, the temperature in {query.Name} is currently {query.Main.Temperature.CelsiusCurrent} °C";
-                OnFinished();
-                App.GetEngine().VoiceOutputEngine.Speak(data);
+                string weatherCondition = "";
+                foreach(Weather weather in query.WeatherList)
+                {
+                    this.Log($"{weather.Main}");
+                    this.Log($"{weather.Description}");
+                    weatherCondition = weather.Description;
+                    string iconUrl = $"https://openweathermap.org/img/wn/{weather.Icon}@4x.png";
+                    string iconFileUrl = CheckIcon(iconUrl);
+                    if (string.IsNullOrEmpty(iconFileUrl))
+                    {
+                        this.Log("Icon Does not Exist : using url");
+                        DownloadIcon(iconUrl);
+                    }
+                    else
+                    {
+                        this.Log($"Icon Exist : using local icon path : {iconFileUrl}");
+                        iconUrl = iconFileUrl;
+                    }
+                    this.MaxUI.ShowIllustration(iconUrl);
+                    break;
+                }
+                
+                if (!string.IsNullOrEmpty(weatherCondition))
+                {
+                    data = $"{{!salutation}}, the weather in {query.Name} is {weatherCondition} and the temperature is {query.Main.Temperature.CelsiusCurrent} °C.";
+                } 
+                else
+                {
+                    data = $"{{!salutation}}, the temperature in {query.Name} is {query.Main.Temperature.CelsiusCurrent} °C.";
+                }
             } 
             catch(Exception e)
             {
-                OnFinished();
-                string data = $"{{!salutation}}, I encountered and error while testing. It say's {e.Message}";
-                App.GetEngine().VoiceOutputEngine.Speak(data);
+                data = $"{{!salutation}}, I encountered an error while checking the weather. It say's {e.Message}";
+            } 
+            finally
+            {
+                this.OnFinished(data);
             }
-            
+
         }
 
         public override void StartService()

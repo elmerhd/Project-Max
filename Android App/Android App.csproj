@@ -67,8 +67,6 @@
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
     <Compile Include="Max\API.cs" />
-    <Compile Include="Max\MaxWidget.cs" />
-    <Compile Include="Max\MediaButtonBroadcastReceiver.cs" />
     <Compile Include="Max\ServerRequest.cs" />
     <Compile Include="Max\ServerResponse.cs" />
     <Compile Include="Max\SMSReceiver.cs" />
@@ -149,14 +147,7 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\max_widget.xml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="xml\max_widget_provider.xml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
+    <Folder Include="xml\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
