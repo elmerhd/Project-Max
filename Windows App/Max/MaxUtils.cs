@@ -39,9 +39,9 @@ namespace Max
         {
             SafeRun(action);
         }
-        public static SoundPlayer WaitingSound = new SoundPlayer(@"max.wav");
+        public static SoundPlayer WaitingSound { get; set; }
 
-        public static SoundPlayer DefaultAlarmSound = new SoundPlayer(@"alarm.wav");
+        public static SoundPlayer DefaultAlarmSound { get; set; }
 
         public static void SafeRun(Action dAction)
         {
@@ -101,7 +101,7 @@ namespace Max
 
         public static void LoadAlarm()
         {
-            foreach(MaxAlarmService maxAlarmService in MaxAlarmService.GetAlarms())
+            foreach(MaxAlarm maxAlarmService in MaxAlarm.GetAlarms())
             {
                 new Thread(maxAlarmService.StartService).Start();
             }
@@ -244,22 +244,35 @@ namespace Max
 
         public static void PlayWaitingSound()
         {
+            WaitingSound = new SoundPlayer(App.GetEngine().MaxConfig.DefaultWaitingSounds[new Random().Next(App.GetEngine().MaxConfig.DefaultWaitingSounds.Count)]);
             new Thread(WaitingSound.Play).Start();
         }
 
         public static void StopWaitingSound()
         {
-            new Thread(WaitingSound.Stop).Start();
+            if (WaitingSound != null)
+            {
+                new Thread(WaitingSound.Stop).Start();
+            }
         }
 
         public static void PlayAlarmSound()
         {
+            DefaultAlarmSound = new SoundPlayer(App.GetEngine().MaxConfig.DefaultAlarmSounds[new Random().Next(App.GetEngine().MaxConfig.DefaultAlarmSounds.Count)]);
             new Thread(DefaultAlarmSound.Play).Start();
         }
 
         public static void StopAlarmSound()
         {
-            new Thread(DefaultAlarmSound.Stop).Start();
+            if (DefaultAlarmSound != null)
+            {
+                new Thread(DefaultAlarmSound.Stop).Start();
+            }
+        }
+
+        public static void CheckCalendar()
+        {
+            new Thread(new MaxCalendar(App.GetEngine(), App.GetUI(), DateTime.Now).StartService).Start();
         }
 
         public static void Shutdown()

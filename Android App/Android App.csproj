@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
     <Compile Include="Max\API.cs" />
+    <Compile Include="Max\MaxService.cs" />
     <Compile Include="Max\ServerRequest.cs" />
     <Compile Include="Max\ServerResponse.cs" />
     <Compile Include="Max\SMSReceiver.cs" />

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <UseWPF>true</UseWPF>
     <RootNamespace>Max</RootNamespace>
     <AssemblyName>Max</AssemblyName>
@@ -99,7 +99,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="alarm.wav">
+    <None Update="sounds\alarms\iloveyoubaby-surfmesa.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="sounds\alarms\summertime-maggiexnyan.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="brain\greetings.aiml">
@@ -147,10 +150,7 @@
     <None Update="config\Substitutions.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="google-calendar-credentials.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="max.wav">
+    <None Update="sounds\waiting\max.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

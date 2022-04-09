@@ -25,6 +25,7 @@ namespace Max
 	[Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
 	public class MainActivity : AppCompatActivity
 	{
+		private static readonly string TAG = typeof(MainActivity).FullName;
 		private const int REQUEST_CODE_SPEECH_INPUT = 1000;
 		private const string APPID = "93e667aa-3452-43a9-a2d7-12ee078fead4";
 		private static readonly string CHANNEL_ID = "maxai_notification";
@@ -39,7 +40,8 @@ namespace Max
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
-			Console.WriteLine("Test");
+			StartService(new Intent(this, typeof(MaxService)));
+			Log.Info(TAG, "User requested that the service be started.");
 			Xamarin.Essentials.Platform.Init(this, savedInstanceState);
 			// Set our view from the "main" layout resource
 			SetContentView(Resource.Layout.activity_main);

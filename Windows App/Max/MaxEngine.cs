@@ -114,6 +114,8 @@ namespace Max
                 MaxConfig.DefaultCommandMessages.AddRange(new string[] { " Yes, {!salutation}.", "Okay, {!salutation}.", "Right away, {!salutation}.", "As you wish, {!salutation}.", "I'm on it.", "Just a second, {!salutation}.", "For you {!salutation}, anything." , "One moment {!salutation}." });
                 MaxConfig.DefaultWaitingMessages.AddRange(new string[] { "One moment, {!salutation}.", "I'm on it." , "Just a second, {!salutation}", "For you {!salutation}, anything."});
                 MaxConfig.DefaultAlarmMessages.AddRange(new string[] { "Alarm set.", "Ok! {!alarm_time}, setting your alarm.", "{!alarm_time}, set.", "{!alarm_time}, setting your alarm." });
+                MaxConfig.DefaultAlarmSounds.AddRange(new string[] { @".\\sounds\\alarms\\summertime-maggiexnyan.wav", @".\\sounds\\alarms\\iloveyoubaby-surfmesa.wav" });
+                MaxConfig.DefaultWaitingSounds.AddRange(new string[] { @".\\sounds\\waiting\\max.wav" });
                 MaxConfig.FacePhotosPath = FacesFolder;
                 MaxConfig.FaceListTextFile = $"{FacesFolder}/{FaceFile}";
                 MaxConfig.HaarCascadePath = $"{ConfigFolder}/{HaarCascadeFile}";
@@ -125,7 +127,6 @@ namespace Max
 
         public void Load()
         {
-
             MaxUtils.PlayWaitingSound();
             BrainEngine = new BrainEngine(this);
             ServerEngine = new ServerEngine(this);
@@ -136,6 +137,7 @@ namespace Max
             //FaceRecognitionEngine = new FaceRecognitionEngine(this);
             NetflixEngine = new NetflixEngine(this);
             VoiceEngine.Speak(MaxConfig.DefaultOnlineMessages[new Random().Next(MaxConfig.DefaultOnlineMessages.Count)]);
+            MaxUtils.CheckCalendar();
             MaxUtils.LoadAlarm();
             MaxUtils.StopWaitingSound();
         }
@@ -155,6 +157,8 @@ namespace Max
         public List<string> DefaultWaitingMessages { get; set; }
         public List<string> DefaultOKMessages { get; set; }
         public List<string> DefaultAlarmMessages { get; set; }
+        public List<string> DefaultAlarmSounds { get; set; }
+        public List<string> DefaultWaitingSounds { get; set; }
         public string GoogleCalendarClientId { get; set; }
         public string GoogleCalendarSecret { get; set; }
         public string FacePhotosPath { get; set; }
@@ -172,6 +176,8 @@ namespace Max
             DefaultWaitingMessages = new List<string>();
             DefaultOKMessages = new List<string>();
             DefaultAlarmMessages = new List<string>();
+            DefaultAlarmSounds = new List<string>();
+            DefaultWaitingSounds = new List<string>();
         }
 
         public static void WriteConfig(MaxConfig conf, string file)

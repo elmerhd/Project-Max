@@ -8,7 +8,7 @@ using System.Diagnostics;
 namespace AIMLBot.AIMLTagHandlers
 {
     /// <summary>
-    /// NOT IMPLEMENTED FOR SECURITY REASONS
+    /// System Actions
     /// </summary>
     public class system : AIMLBot.Utils.AIMLTagHandler
     {
@@ -73,12 +73,12 @@ namespace AIMLBot.AIMLTagHandlers
                 } 
                 else if (uri.Equals("setAlarm"))
                 {
-                    new Thread(new MaxAlarmService(MaxEngine, MaxUI, MaxUtils.DecodedDateTime, true).StartService).Start();
+                    new Thread(new MaxAlarm(MaxEngine, MaxUI, MaxUtils.DecodedDateTime, true).StartService).Start();
                     return MaxEngine.MaxConfig.DefaultAlarmMessages[new Random().Next(MaxEngine.MaxConfig.DefaultAlarmMessages.Count)];
                 }
                 else if (uri.Equals("checkCalendar"))
                 {
-                    new Thread(new MaxCalendarService(MaxEngine, MaxUI, DateTime.Now).StartService).Start();
+                    new Thread(new MaxCalendar(MaxEngine, MaxUI, DateTime.Now).StartService).Start();
                     return MaxEngine.MaxConfig.DefaultWaitingMessages[new Random().Next(MaxEngine.MaxConfig.DefaultWaitingMessages.Count)];
                 }
                 return MaxEngine.MaxConfig.DefaultCommandMessages[new Random().Next(MaxEngine.MaxConfig.DefaultCommandMessages.Count)];
