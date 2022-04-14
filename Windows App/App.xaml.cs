@@ -11,6 +11,7 @@ namespace Max
         private static MaxEngine MaxEngine;
         private bool showUI = false;
         private static MaxUI MaxUI;
+        public static bool IsReadyForListening = false;
         public App()
         {
             MaxEngine = new MaxEngine();

@@ -17,16 +17,18 @@ namespace Max
             MaxTimerTimer = new Timer();
             MaxTimerTimer.Interval = timeSpan.TotalMilliseconds;
             MaxTimerTimer.Elapsed += AlarmTimer_Elapsed;
+            this.Log($"Starting Service: {nameof(MaxTimer)}");
         }
 
         private void AlarmTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            this.Log("Timer : Playing timer sound");
+            this.Log($"{nameof(MaxTimer)}: Playing timer sound");
             if (!IsPlayingSound)
             {
                 MaxUtils.PlayAlarmSound();
                 IsPlayingSound = true;
                 MaxTimerTimer.Stop();
+                this.OnFinished();
             }
 
         }

@@ -16,7 +16,7 @@ namespace Max
         public AppEngine(MaxEngine maxEngine)
         {
             this.MaxEngine = maxEngine;
-            maxEngine.BrainEngine.Log($"Loading {nameof(AppEngine)}");
+            maxEngine.BrainEngine.Log($"Loading Engine: {nameof(AppEngine)}");
             GetAllApps();
         }
         public void GetAllApps()

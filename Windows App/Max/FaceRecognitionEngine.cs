@@ -41,7 +41,7 @@ namespace Max
             Timer.Interval = 500;
             Timer.Elapsed += Timer_Elapsed;
             Timer.Start();
-            maxEngine.BrainEngine.Log($"Loading {nameof(FaceRecognitionEngine)}");
+            maxEngine.BrainEngine.Log($"Loading Engine: {nameof(FaceRecognitionEngine)}");
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -111,7 +111,7 @@ namespace Max
                 //Eigen Face Algorithm
                 FaceRecognizer.PredictionResult result = recognizer.Predict(detectedFace.Resize(100, 100, Inter.Cubic));
                 FaceName = nameList[result.Label];
-                App.GetEngine().VoiceEngine.Speak("Hello "+FaceName);
+                App.GetEngine().VoiceOutputEngine.Speak("Hello "+FaceName);
 
             }
             else

@@ -29,7 +29,7 @@ namespace Max
             Bot.loadAIMLFromFiles();
             User = new User(MaxEngine.MaxConfig.DefaultUserName, Bot);
             Bot.isAcceptingUserInput = true;
-            Log($"Loading {nameof(BrainEngine)}");
+            Log($"Loading Engine: {nameof(BrainEngine)}");
         }
 
         public string GetResponse(string text)
@@ -39,28 +39,28 @@ namespace Max
             return result.Output;
         }
 
-        public void Analyze(ServerResponse serverResponse)
+        public void Analyze(string serverResponseMessage)
         {
-            Log($"Analyzing = {serverResponse.Message}");
+            Log($"Analyzing Speech: {serverResponseMessage}");
             if (App.GetUI() != null)
             {
-                App.GetUI().UpdateRecognizedText(serverResponse.Message);
+                App.GetUI().UpdateRecognizedText(serverResponseMessage);
             }
-            string response = GetResponse(serverResponse.Message);
-            MaxEngine.VoiceEngine.Speak(response);
+            string response = GetResponse(serverResponseMessage);
+            MaxEngine.VoiceOutputEngine.Speak(response);
         }
 
-        public void Analyze(ServerResponse serverResponse, bool hasTime)
+        public void Analyze(string serverResponseMessage, bool hasTime)
         {
-            Log($"Analyzing = {serverResponse.Message} hasTime:true");
+            Log($"Analyzing Speech: {serverResponseMessage} \thasTime: {hasTime}");
 
             if (App.GetUI() != null)
             {
-                App.GetUI().UpdateRecognizedText(serverResponse.Message);
+                App.GetUI().UpdateRecognizedText(serverResponseMessage);
             }
-            MaxUtils.DecodeTime(serverResponse.Message);
-            string response = GetResponse(serverResponse.Message);
-            MaxEngine.VoiceEngine.Speak(response);
+            MaxUtils.DecodeTime(serverResponseMessage);
+            string response = GetResponse(serverResponseMessage);
+            MaxEngine.VoiceOutputEngine.Speak(response);
         }
 
         public void Log(string message)

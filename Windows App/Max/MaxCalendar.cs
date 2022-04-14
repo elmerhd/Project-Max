@@ -23,8 +23,7 @@ namespace Max
         {
             this.OnStart(true);
             this.DateTime = dateTime;
-            this.Log($"Initializing Calendar ...");
-            this.Log($"Getting events. . .");
+            this.Log($"Starting Service: {nameof(MaxCalendar)}");
         }
 
         private void GetEvents(DateTime dateTime)
@@ -92,7 +91,7 @@ namespace Max
                         eventsValue += $"{eventItem.Summary} at {dt.ToString("hh:mm tt")}. ";
                         count++;
                     }
-                    data = $"you have {count} upcoming { (count > 1 ? "events" : "event") } {day}, {eventsValue}";
+                    data = $"You have {count} upcoming { (count > 1 ? "events" : "event") } {day}, {eventsValue}";
                 }
                 else
                 {
@@ -102,11 +101,11 @@ namespace Max
             catch (Exception ex)
             {
                 data = $"I encountered an error while checking your calendar. It say's {ex.Message}";
-                this.Log(data);
+                this.Log($"{nameof(MaxCalendar)}: {data}");
             } 
             finally
             {
-                this.Log(data);
+                this.Log($"{nameof(MaxCalendar)}: {data}");
                 this.OnFinished(data);
             }
         }

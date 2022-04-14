@@ -15,7 +15,13 @@
         ContentRendered="OnContentRendered"
         WindowState="Maximized"
         >
-
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo>
+            <TaskbarItemInfo.ThumbButtonInfos>
+                <ThumbButtonInfo Description="Play!" Click="ThumbButtonInfo_Click"/>
+            </TaskbarItemInfo.ThumbButtonInfos>
+        </TaskbarItemInfo>
+    </Window.TaskbarItemInfo>
     <Window.Background>
         <SolidColorBrush Opacity="0.9"/>
     </Window.Background>
@@ -75,46 +81,6 @@
         </EventTrigger>
     </Window.Triggers>
     <Border BorderThickness="5">
-        <Border.BorderBrush>
-            <LinearGradientBrush>
-                <GradientStop x:Name="GradientStop1" Color="Blue" Offset="0.0" />
-                <GradientStop x:Name="GradientStop2" Color="Purple" Offset="0.5" />
-                <GradientStop x:Name="GradientStop3" Color="Green" Offset="1.0" />
-            </LinearGradientBrush>
-        </Border.BorderBrush>
-        <Border.Triggers>
-            <EventTrigger RoutedEvent="Loaded">
-                <BeginStoryboard>
-                    <Storyboard>
-                        <DoubleAnimation 
-                            Storyboard.TargetName="GradientStop1"
-                            Storyboard.TargetProperty="Offset"
-                            From="0.0" To="1.0" Duration="0:0:1.5"
-                            RepeatBehavior="Forever"
-                            AutoReverse="True" />
-                        <ColorAnimation 
-                            Storyboard.TargetName="GradientStop2"
-                            Storyboard.TargetProperty="Color"
-                            From="Purple" To="Yellow" 
-                            Duration="0:0:1.5"
-                            AutoReverse="True"
-                            RepeatBehavior="Forever"
-                            BeginTime="0:0:3" />
-                        <ColorAnimation 
-                            Storyboard.TargetName="GradientStop3"
-                            Storyboard.TargetProperty="Color" 
-                            Duration="0:0:1.5" 
-                            RepeatBehavior="Forever"
-                            AutoReverse="True"
-                            BeginTime="0:0:6">
-                            <ColorAnimation.By>
-                                <Color ScA="-1" ScR="0" ScB="0" ScG="0" />
-                            </ColorAnimation.By>
-                        </ColorAnimation>
-                    </Storyboard>
-                </BeginStoryboard>
-            </EventTrigger>
-        </Border.Triggers>
         <Grid Background="black" x:Name="MaxWidgetContainer" >
             <Grid x:Name="MaxUIWidget" Width="{Binding SpeakerMasterPeakValue, FallbackValue=400}" Height="{Binding SpeakerMasterPeakValue, FallbackValue=400}">
                 <Grid.RowDefinitions>
@@ -183,6 +149,16 @@
                         FontWeight="Bold"
                         Opacity="0.1"
                         FontSize="86"/>
+                    <TextBlock 
+                        x:Name="StatusText"
+                        Margin="0,248,10,113" 
+                        Text="" 
+                        TextWrapping="Wrap"
+                        FontFamily="Azonix"
+                        Foreground="#1885b9"
+                        FontSize="25"
+                        TextAlignment="Center"/>
+
                 </Grid>
 
             </Grid>
@@ -206,6 +182,7 @@
                 Foreground="#1885b9"
                 FontSize="25"
                 TextAlignment="Center" Height="88" VerticalAlignment="Bottom"/>
+
         </Grid>
     </Border>
 </Window>

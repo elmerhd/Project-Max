@@ -48,6 +48,17 @@ namespace Max
             }
         }
 
+        public void OnFinished()
+        {
+            Type type = this.GetType().UnderlyingSystemType;
+            String className = type.Name;
+            Log($"Finishing Service : {className}");
+            if (PlayLoadingMusic)
+            {
+                MaxUtils.StopWaitingSound();
+            }
+        }
+
         public void Log(string data)
         {
             MaxEngine.BrainEngine.Log(data);
@@ -55,7 +66,7 @@ namespace Max
 
         public void Speak(string data)
         {
-            MaxEngine.VoiceEngine.Speak(data);
+            MaxEngine.VoiceOutputEngine.Speak(data);
         }
         public abstract void StartService();
     }

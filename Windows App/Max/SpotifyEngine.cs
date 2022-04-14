@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Automation;
 
@@ -31,20 +32,19 @@ namespace Max
             Timer.Interval = 1800000;
             Timer.Elapsed += TokenTimer;
             Timer.Start();
-            maxEngine.BrainEngine.Log($"Loading {nameof(SpotifyEngine)}");
+            maxEngine.BrainEngine.Log($"Loading Engine: {nameof(SpotifyEngine)}");
         }
 
         private void TokenTimer(object sender, ElapsedEventArgs e)
         {
             try
             {
-                OpenConnection();
+                Task.Run(async() => {  await OpenConnection();});
             }
             catch (Exception ex)
             {
-                MaxEngine.BrainEngine.Log($"Error : {nameof(SpotifyEngine)} : {ex.Message}");
+                MaxEngine.BrainEngine.Log($"{nameof(SpotifyEngine)}: {ex.Message}");
             }
-
         }
 
         public void OpenSpotify()
@@ -60,7 +60,7 @@ namespace Max
 
         }
 
-        public async void OpenConnection()
+        public async Task OpenConnection()
         {
             var config = SpotifyClientConfig.CreateDefault();
             var server = new EmbedIOAuthServer(new Uri("http://localhost:5000/callback"), 5000);
@@ -68,7 +68,7 @@ namespace Max
             {
                 await server.Stop();
                 var tokenResponse = await new OAuthClient(config).RequestToken(new AuthorizationCodeTokenRequest(
-                  _clientId, _secretId, response.Code, server.BaseUri
+                    _clientId, _secretId, response.Code, server.BaseUri
                 ));
 
                 Spotify = new SpotifyClient(config.WithToken(tokenResponse.AccessToken));
@@ -110,6 +110,7 @@ namespace Max
 
         public void InitSpotifyPlaylist()
         {
+            MaxEngine.BrainEngine.Log($"{nameof(SpotifyEngine)}: Initializing Playlist");
             List<Category> spotifyPlaylistCategories = new List<Category>();
             foreach (SimplePlaylist spl in Playlists)
             {
@@ -124,36 +125,43 @@ namespace Max
 
         public void Resume()
         {
+            MaxEngine.BrainEngine.Log($"{nameof(SpotifyEngine)}: Resume");
             Spotify.Player.ResumePlayback();
         }
 
         public void Pause()
         {
+            MaxEngine.BrainEngine.Log($"{nameof(SpotifyEngine)}: Pause");
             Spotify.Player.PausePlayback();
         }
 
         public void Next()
         {
+            MaxEngine.BrainEngine.Log($"{nameof(SpotifyEngine)}: Next");
             Spotify.Player.SkipNext();
         }
 
         public void Previous()
         {
+            MaxEngine.BrainEngine.Log($"{nameof(SpotifyEngine)}: Previous");
             Spotify.Player.SkipPrevious();
         }
 
         public void Shuffle(bool shuffle)
         {
+            MaxEngine.BrainEngine.Log($"{nameof(SpotifyEngine)}: \tShuffle: {shuffle}");
             Spotify.Player.SetShuffle(new PlayerShuffleRequest(shuffle));
         }
 
         public void Volume(int volume)
         {
+            MaxEngine.BrainEngine.Log($"{nameof(SpotifyEngine)}: \tVolume:{volume}");
             Spotify.Player.SetVolume(new PlayerVolumeRequest(volume));
         }
 
         public async void TransferPlayback(string devicetypeorname)
         {
+            MaxEngine.BrainEngine.Log($"{nameof(SpotifyEngine)}: \tTransfer Playback: {devicetypeorname}");
             DeviceResponse deviceResponse = await Spotify.Player.GetAvailableDevices();
             AvailableDevices = deviceResponse.Devices;
             List<string> deviceIds = new List<string>();
@@ -179,6 +187,7 @@ namespace Max
 
         public void Play(string uri)
         {
+            MaxEngine.BrainEngine.Log($"{nameof(SpotifyEngine)}: \tPlaying: {uri}");
             if (uri.Contains("spotify:track:"))
             {
                 IList<string> uris = new List<string>() { uri };
@@ -200,6 +209,7 @@ namespace Max
 
         public async void BrowseArtists(string artist)
         {
+            MaxEngine.BrainEngine.Log($"{nameof(SpotifyEngine)}: \tSearching Artist: {artist}");
             var searchResponse = await Spotify.Search.Item(new SearchRequest(SearchRequest.Types.Artist, artist) { Limit = 3 });
             List<FullArtist> artists = searchResponse.Artists.Items;
             if (artists.Count > 0)
@@ -214,6 +224,7 @@ namespace Max
 
         public async void BrowseTrack(string track, string artist)
         {
+            MaxEngine.BrainEngine.Log($"{nameof(SpotifyEngine)}: \tSearching Track: {track} - {artist}");
             var searchResponse = await Spotify.Search.Item(new SearchRequest(SearchRequest.Types.Track, $"{track} - {artist}") { Limit = 3 });
             List<FullTrack> tracks = searchResponse.Tracks.Items;
             if (tracks.Count > 0)
@@ -228,6 +239,7 @@ namespace Max
 
         public async void BrowseAlbum(string album, string artist)
         {
+            MaxEngine.BrainEngine.Log($"{nameof(SpotifyEngine)}: \tSearching Album: {album} - {artist}");
             var searchResponse = await Spotify.Search.Item(new SearchRequest(SearchRequest.Types.Album, $"{album} - {artist}") { Limit = 3 });
             List<SimpleAlbum> albums = searchResponse.Albums.Items;
             if (albums.Count > 0)

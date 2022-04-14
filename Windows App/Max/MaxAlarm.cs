@@ -33,6 +33,7 @@ namespace Max
             this.MaxAlarmTimer = new Timer();
             this.MaxAlarmTimer.Interval = 1000;
             this.MaxAlarmTimer.Elapsed += Timer_Elapsed;
+            this.Log($"Starting Service: {nameof(MaxAlarm)}");
         }
 
         public void CheckAlarmFile()
@@ -57,13 +58,13 @@ namespace Max
             this.Now = DateTime.Now;
             if (Now.Month == DateTime.Month && Now.Day == DateTime.Day && Now.Year == DateTime.Year && Now.Hour == DateTime.Hour && Now.Minute == DateTime.Minute)
             {
-                this.Log("Alarm : Playing alarm sound");
+                this.Log($"{nameof(MaxAlarm)}: Playing alarm sound");
                 if (!IsPlayingSound)
                 {
                     MaxUtils.PlayAlarmSound();
                     IsPlayingSound = true;
                     MaxAlarmTimer.Stop();
-                    this.OnFinished("");
+                    this.OnFinished();
                 }
             }
 

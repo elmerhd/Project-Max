@@ -5,7 +5,6 @@ using Android.Runtime;
 using Android.Widget;
 using Android.Content;
 using Android.Speech;
-using Java.Util;
 using System.Collections.Generic;
 using System;
 using System.Net.Http;
@@ -19,6 +18,9 @@ using Android.Content.PM;
 using System.Net.Sockets;
 using Android.Media;
 using Android.Media.Session;
+using System.Net;
+using System.Threading;
+using System.Timers;
 
 namespace Max
 {
@@ -30,6 +32,9 @@ namespace Max
 		private const string APPID = "93e667aa-3452-43a9-a2d7-12ee078fead4";
 		private static readonly string CHANNEL_ID = "maxai_notification";
 		private static readonly int NOTIFICATION_ID = 1000;
+		private const int PORT = 6669;
+		public static UdpClient UdpClient = new UdpClient();
+		private static ServerResponse ServerResponse = new ServerResponse();
 
 		private ImageButton BtnMic;
 		public static SpeechRecognizer Recognizer { get; set; }
@@ -40,19 +45,50 @@ namespace Max
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
-			StartService(new Intent(this, typeof(MaxService)));
-			Log.Info(TAG, "User requested that the service be started.");
+			
 			Xamarin.Essentials.Platform.Init(this, savedInstanceState);
 			// Set our view from the "main" layout resource
 			SetContentView(Resource.Layout.activity_main);
 
 			InitComponents();
 			RequestApplicationPermissions();
+			System.Timers.Timer timer = new System.Timers.Timer();
+			timer.Interval = 500;
+			timer.Elapsed += t_Tick;
+			timer.Start();
+		}
+
+        private void t_Tick(object sender, ElapsedEventArgs e)
+        {
+			try
+			{
+				var from = new IPEndPoint(0, 0);
+				var recvBuffer = UdpClient.Receive(ref from);
+				string dataBuff = (Encoding.UTF8.GetString(recvBuffer));
+				ServerResponse content = JsonConvert.DeserializeObject<ServerResponse>(dataBuff);
+
+				if (content.UUIDv4 != ServerResponse.UUIDv4)
+				{
+					ServerResponse = content;
+					if (content.Message == "hey max")
+					{
+						this.RunOnUiThread(() =>
+						{
+							Recognizer.StartListening(SpeechIntent);
+						});
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("error : " + ex.Message);
+			}
 		}
 
 		public void InitComponents()
 		{
 			CreateNotificationChannel();
+			UdpClient.Client.Bind(new IPEndPoint(IPAddress.Any, PORT));
 			BtnMic = FindViewById<ImageButton>(id: Resource.Id.imageButtonMic);
 			BtnMic.Click += BtnMic_Click;
 		}
@@ -116,13 +152,13 @@ namespace Max
 			SpeechIntent = new Intent(RecognizerIntent.ActionRecognizeSpeech);
 			SpeechIntent.PutExtra(RecognizerIntent.ExtraLanguageModel, RecognizerIntent.LanguageModelFreeForm);
 			SpeechIntent.PutExtra(RecognizerIntent.ExtraCallingPackage, PackageName);
-			SpeechIntent.PutExtra(RecognizerIntent.ExtraLanguage, Locale.Default);
+			SpeechIntent.PutExtra(RecognizerIntent.ExtraLanguage, Java.Util.Locale.Default);
 			SpeechIntent.PutExtra(RecognizerIntent.ExtraLanguagePreference, Java.Util.Locale.Default);
 			SpeechIntent.PutExtra(RecognizerIntent.ExtraMaxResults, 1);
 			SpeechIntent.PutExtra("android.speech.extra.DICTATION_MODE", true);
 			SpeechIntent.PutExtra(RecognizerIntent.ExtraPartialResults, false);
-			SpeechIntent.PutExtra(RecognizerIntent.ExtraSpeechInputCompleteSilenceLengthMillis, 1500);
-			SpeechIntent.PutExtra(RecognizerIntent.ExtraSpeechInputPossiblyCompleteSilenceLengthMillis, 1500);
+			SpeechIntent.PutExtra(RecognizerIntent.ExtraSpeechInputCompleteSilenceLengthMillis, 15000);
+			SpeechIntent.PutExtra(RecognizerIntent.ExtraSpeechInputPossiblyCompleteSilenceLengthMillis, 15000);
 			SpeechIntent.PutExtra(RecognizerIntent.ExtraSpeechInputMinimumLengthMillis, 15000);
 			SpeechIntent.PutExtra(RecognizerIntent.ExtraPartialResults, true);
 		}

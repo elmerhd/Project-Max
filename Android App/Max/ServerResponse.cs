@@ -13,6 +13,7 @@ namespace Max
 {
     public class ServerResponse
     {
+        public string UUIDv4 { get; set; }
         public string Message { get; set; }
     }
 }

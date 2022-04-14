@@ -20,18 +20,19 @@ namespace Max
             this.OnStart();
             this.OpenWeatherApiClient = new OpenWeatherApiClient(apiKey);
             this.Location = location;
+            this.Log($"Starting Service: {nameof(MaxWeather)}");
         }
 
         public void DownloadIcon(string url)
         {
-            this.Log("Downloading Icons . . .");
+            this.Log($"{nameof(MaxWeather)}: Downloading Icon {url}");
             using (WebClient client = new WebClient())
             {
                 Uri uri = new Uri(url);
                 string filename = System.IO.Path.GetFileName(uri.LocalPath);
                 string path = Path.Combine(Environment.CurrentDirectory, $"{MaxEngine.ImagesFolder}\\{WeatherIconFolder}\\", filename);
                 client.DownloadFileAsync(new Uri(url), path);
-                this.Log($"Icon Saved : {path}");
+                this.Log($"{nameof(MaxWeather)}: \tIcon Saved: {path}");
             }
         }
 
@@ -56,25 +57,25 @@ namespace Max
             string data = string.Empty;
             try
             {
-                this.Log($"Getting Weather ...");
-                this.Log($"Getting Weather in {Location}...");
+                this.Log($"{nameof(MaxWeather)}: Getting Weather ...");
+                this.Log($"{nameof(MaxWeather)}: Getting Weather in {Location}...");
                 var query = await OpenWeatherApiClient.QueryAsync(Location);
                 string weatherCondition = "";
                 foreach(Weather weather in query.WeatherList)
                 {
-                    this.Log($"{weather.Main}");
-                    this.Log($"{weather.Description}");
+                    this.Log($"{nameof(MaxWeather)}: {weather.Main}");
+                    this.Log($"{nameof(MaxWeather)}: {weather.Description}");
                     weatherCondition = weather.Description;
                     string iconUrl = $"https://openweathermap.org/img/wn/{weather.Icon}@4x.png";
                     string iconFileUrl = CheckIcon(iconUrl);
                     if (string.IsNullOrEmpty(iconFileUrl))
                     {
-                        this.Log("Icon Does not Exist : using url");
+                        this.Log($"{nameof(MaxWeather)}: \tIcon Does not Exist, Using url {iconUrl}");
                         DownloadIcon(iconUrl);
                     }
                     else
                     {
-                        this.Log($"Icon Exist : using local icon path : {iconFileUrl}");
+                        this.Log($"{nameof(MaxWeather)}: Icon Exist, using local icon path {iconFileUrl}");
                         iconUrl = iconFileUrl;
                     }
                     this.MaxUI.ShowIllustration(iconUrl);
@@ -96,6 +97,7 @@ namespace Max
             } 
             finally
             {
+                this.Log($"{nameof(MaxWeather)} : {data}");
                 this.OnFinished(data);
             }
 

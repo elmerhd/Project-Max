@@ -33,12 +33,9 @@ namespace Max
             Timer.Interval = 500;
             Timer.Elapsed += Timer_Elapsed;
             Timer.Start();
-            maxEngine.BrainEngine.Log($"Loading {nameof(ServerEngine)}");
+            maxEngine.BrainEngine.Log($"Loading Engine: {nameof(ServerEngine)}");
         }
 
-
-
-        
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             try
@@ -54,17 +51,17 @@ namespace Max
                     bool hasTime = MaxUtils.CheckHasTime(content.Message);
                     if (hasTime)
                     {
-                        MaxEngine.BrainEngine.Analyze(content, hasTime);
+                        MaxEngine.BrainEngine.Analyze(content.Message, hasTime);
                     } 
                     else
                     {
-                        MaxEngine.BrainEngine.Analyze(content);
+                        MaxEngine.BrainEngine.Analyze(content.Message);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("error : " + ex.Message);
+                Console.WriteLine($"{nameof(ServerEngine)}: {ex.Message} ");
             }
             
         }
@@ -76,5 +73,10 @@ namespace Max
         public string Message { get; set; }
         public int Port { get; set; }
 
+    }
+    public class ServerRequest
+    {
+        public string UUIDv4 { get; set; }
+        public string Message { get; set; }
     }
 }

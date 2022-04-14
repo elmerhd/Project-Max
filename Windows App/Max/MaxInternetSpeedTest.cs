@@ -16,6 +16,7 @@ namespace Max
         {
             this.OnStart();
             SpeedTestClientClient = new SpeedTestClient();
+            this.Log($"Starting Service: {nameof(MaxInternetSpeedTest)}");
         }
 
         public void GetInternetSpeedTest()
@@ -24,10 +25,9 @@ namespace Max
             Server server = null;
             try
             {
-                this.Log($"Testing Internet Speed ...");
                 var settings = SpeedTestClientClient.GetSettings();
-                this.Log($"Initializing Settings ...");
-                this.Log($"Looking for Nearest Matching Server ...");
+                this.Log($"{nameof(MaxInternetSpeedTest)}: Initializing Settings ...");
+                this.Log($"{nameof(MaxInternetSpeedTest)}: Looking for Nearest Matching Server ...");
                 foreach (Server foundServer in settings.Servers)
                 {
                     this.Log($"Found Server : Name:{foundServer.Name} Host:{foundServer.Host} Country:{foundServer.Country} Distance:{foundServer.Distance} Sponsor:{foundServer.Sponsor}");
@@ -39,23 +39,23 @@ namespace Max
                 }
                 if (server != null)
                 {
-                    this.Log($"Selecting : Name:{server.Name} Host:{server.Host} Country:{server.Country} Distance:{server.Distance} Sponsor:{server.Sponsor}");
+                    this.Log($"{nameof(MaxInternetSpeedTest)}: \tName:{server.Name} \tHost:{server.Host} \tCountry:{server.Country} \tDistance:{server.Distance} \tSponsor:{server.Sponsor}");
                 }
                 else
                 {
-                    this.Log($"No Matching Server from your provider. Selecting Nearest Server...");
+                    this.Log($"{nameof(MaxInternetSpeedTest)}: No Matching Server from your provider. Selecting Nearest Server...");
                     server = settings.Servers.First();
-                    this.Log($"Selecting : Name:{server.Name} Host:{server.Host} Country:{server.Country} Distance:{server.Distance} Sponsor:{server.Sponsor}");
+                    this.Log($"{nameof(MaxInternetSpeedTest)}: \tName:{server.Name} \tHost:{server.Host} \tCountry:{server.Country} \tDistance:{server.Distance} \tSponsor:{server.Sponsor}");
                 }
-                this.Log($"Testing Latency ...");
+                this.Log($"{nameof(MaxInternetSpeedTest)}: \tTesting Latency ...");
                 var latency = SpeedTestClientClient.TestServerLatency(server);
-                this.Log($"Latency : {latency}");
-                this.Log($"Testing Download Speed ...");
+                this.Log($"{nameof(MaxInternetSpeedTest)}: \tLatency : {latency}");
+                this.Log($"{nameof(MaxInternetSpeedTest)}: \tTesting Download Speed ...");
                 var downloadSpeed = SpeedTestClientClient.TestDownloadSpeed(server, settings.Download.ThreadsPerUrl);
-                this.Log($"Download Speed : {downloadSpeed}");
-                this.Log($"Testing Upload Speed ...");
+                this.Log($"{nameof(MaxInternetSpeedTest)}: \tDownload Speed : {downloadSpeed}");
+                this.Log($"{nameof(MaxInternetSpeedTest)}: \tTesting Upload Speed ...");
                 var uploadSpeed = SpeedTestClientClient.TestUploadSpeed(server, settings.Upload.ThreadsPerUrl);
-                this.Log($"Upload Speed : {uploadSpeed}");
+                this.Log($"{nameof(MaxInternetSpeedTest)}: \tUpload Speed : {uploadSpeed}");
 
                 string delay = (latency > 100) ? "high" : "low";
                 if (latency < 50 && latency > 1)

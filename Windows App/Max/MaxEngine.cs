@@ -2,13 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
+using System.Speech.Recognition;
 
 namespace Max
 {
     public class MaxEngine
     {
-        public VoiceEngine VoiceEngine;
+        public VoiceOutputEngine VoiceOutputEngine;
+
+        public VoiceInputEngine VoiceInputEngine;
 
         public BrainEngine BrainEngine;
 
@@ -100,7 +102,7 @@ namespace Max
             else
             {
                 MaxConfig = new MaxConfig();
-                MaxConfig.Voice = "IVONA 2 Brian";
+                MaxConfig.Voice = "IVONA 2 Emma";
                 MaxConfig.AppId = "93e667aa-3452-43a9-a2d7-12ee078fead4";
                 MaxConfig.DefaultSalutation = "sir";
                 MaxConfig.DefaultUserName = "elmer";
@@ -116,6 +118,7 @@ namespace Max
                 MaxConfig.DefaultAlarmMessages.AddRange(new string[] { "Alarm set.", "Ok! {!alarm_time}, setting your alarm.", "{!alarm_time}, set.", "{!alarm_time}, setting your alarm." });
                 MaxConfig.DefaultAlarmSounds.AddRange(new string[] { @".\\sounds\\alarms\\summertime-maggiexnyan.wav", @".\\sounds\\alarms\\iloveyoubaby-surfmesa.wav" });
                 MaxConfig.DefaultWaitingSounds.AddRange(new string[] { @".\\sounds\\waiting\\max.wav" });
+                MaxConfig.DefaultListeningMessages.AddRange(new string[] { "I'm Listening.", "Yes?", "Yes, Go Ahead." });
                 MaxConfig.FacePhotosPath = FacesFolder;
                 MaxConfig.FaceListTextFile = $"{FacesFolder}/{FaceFile}";
                 MaxConfig.HaarCascadePath = $"{ConfigFolder}/{HaarCascadeFile}";
@@ -130,16 +133,17 @@ namespace Max
             MaxUtils.PlayWaitingSound();
             BrainEngine = new BrainEngine(this);
             ServerEngine = new ServerEngine(this);
-            VoiceEngine = new VoiceEngine(this);
-            VoiceEngine.Speak(MaxConfig.DefaultIntroductionMessages[new Random().Next(MaxConfig.DefaultIntroductionMessages.Count)]);
+            VoiceOutputEngine = new VoiceOutputEngine(this);
+            VoiceOutputEngine.Speak(MaxConfig.DefaultIntroductionMessages[new Random().Next(MaxConfig.DefaultIntroductionMessages.Count)]);
             SpotifyEngine = new SpotifyEngine(this);
             AppEngine = new AppEngine(this);
             //FaceRecognitionEngine = new FaceRecognitionEngine(this);
             NetflixEngine = new NetflixEngine(this);
-            VoiceEngine.Speak(MaxConfig.DefaultOnlineMessages[new Random().Next(MaxConfig.DefaultOnlineMessages.Count)]);
+            VoiceOutputEngine.Speak(MaxConfig.DefaultOnlineMessages[new Random().Next(MaxConfig.DefaultOnlineMessages.Count)]);
             MaxUtils.CheckCalendar();
             MaxUtils.LoadAlarm();
             MaxUtils.StopWaitingSound();
+            VoiceInputEngine = new VoiceInputEngine(this);
         }
     }
 
@@ -156,6 +160,7 @@ namespace Max
         public List<string> DefaultIntroductionMessages { get; set; }
         public List<string> DefaultWaitingMessages { get; set; }
         public List<string> DefaultOKMessages { get; set; }
+        public List<string> DefaultListeningMessages { get; set; }
         public List<string> DefaultAlarmMessages { get; set; }
         public List<string> DefaultAlarmSounds { get; set; }
         public List<string> DefaultWaitingSounds { get; set; }
@@ -178,6 +183,7 @@ namespace Max
             DefaultAlarmMessages = new List<string>();
             DefaultAlarmSounds = new List<string>();
             DefaultWaitingSounds = new List<string>();
+            DefaultListeningMessages = new List<string>();
         }
 
         public static void WriteConfig(MaxConfig conf, string file)

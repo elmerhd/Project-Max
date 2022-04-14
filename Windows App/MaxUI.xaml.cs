@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using Windows.Media.SpeechRecognition;
 
 namespace Max
 {
@@ -51,6 +52,13 @@ namespace Max
             this.Dispatcher.Invoke(()=> {
                 LastSubText = text;
                 ResponseText.Text = text;
+            });
+        }
+
+        public void UpdateStatusText(string text)
+        {
+            this.Dispatcher.Invoke(() => {
+                StatusText.Text = text;
             });
         }
 
@@ -131,9 +139,6 @@ namespace Max
             }
         }
 
-
-       
-
         public void ShowElement(UIElement element)
         {
             element.Opacity = 0;
@@ -148,6 +153,43 @@ namespace Max
             element.BeginAnimation(UIElement.OpacityProperty, animation);
         }
 
+        private void ThumbButtonInfo_Click(object sender, EventArgs e)
+        {
+            Task.Run(async () =>
+            {
+                // Create an instance of SpeechRecognizer.
+                var speechRecognizer = new Windows.Media.SpeechRecognition.SpeechRecognizer();
+
+                // Compile the dictation grammar that is loaded by default.
+                await speechRecognizer.CompileConstraintsAsync();
+
+                // Start recognition.
+                try
+                {
+                    Windows.Media.SpeechRecognition.SpeechRecognitionResult speechRecognitionResult = await speechRecognizer.RecognizeAsync();
+                    // If successful, display the recognition result.
+                    if (speechRecognitionResult.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
+                    {
+                        UpdateRecognizedText(speechRecognitionResult.Text);
+                        
+                    }
+                }
+                catch (Exception exception)
+                {
+                    RecognizedText.Text = exception.Message;
+                    //if ((uint)exception.HResult == HResultPrivacyStatementDeclined)
+                    //{
+                    //    this.resultTextBlock.Visibility = Visibility.Visible;
+                    //    lblResult.Text = "Özür dilerim, konuşma tanımayı kullanmak mümkün değildi. Konuşma gizlilik bildirimini kabul edilmedi.";
+                    //}
+                    //else
+                    //{
+                    //    var messageDialog = new Windows.UI.Popups.MessageDialog(exception.Message, "Exception");
+                    //    messageDialog.ShowAsync().GetResults();
+                    //}
+                }
+            });
+        }
     }
     
 }
